@@ -204,7 +204,10 @@ router.get('/export/csv', (req, res) => {
 router.get('/extension/download', (req, res) => {
   const browser = req.query.browser === 'firefox' ? 'firefox' : 'chrome';
   try {
-    const zipBuffer = buildExtensionZip(browser);
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+    const host = req.get('host');
+    const serverUrl = host ? `${protocol}://${host}` : null;
+    const zipBuffer = buildExtensionZip(browser, serverUrl);
     const filename = `scratch-ai-${browser}-extension.zip`;
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);

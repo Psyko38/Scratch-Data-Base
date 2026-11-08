@@ -108,31 +108,58 @@ function collectFilesRecursive(dirPath, baseDir = dirPath) {
 
 /**
  * Build a ZIP package for the browser extension ('chrome' or 'firefox')
+ * @param {('chrome'|'firefox')} browserTarget
+ * @param {string|null} serverUrl - Optional server origin to inject as default endpoint
  */
-function buildExtensionZip(browserTarget = 'chrome') {
+function buildExtensionZip(browserTarget = 'chrome', serverUrl = null) {
   const extDir = path.resolve(__dirname, '../../../extension');
   const rawFiles = collectFilesRecursive(extDir);
 
   const files = rawFiles.map(file => {
-    if (file.name === 'manifest.json' && browserTarget === 'firefox') {
-      const manifest = JSON.parse(file.data.toString('utf8'));
-      // Add Firefox Gecko compatibility settings and background.scripts fallback
-      manifest.background = {
-        scripts: ['background/service-worker.js'],
-        service_worker: 'background/service-worker.js'
-      };
-      manifest.browser_specific_settings = {
-        gecko: {
-          id: 'scratch-ai@scratch-community.org',
-          strict_min_version: '109.0'
+    let content = file.data;
+
+    // If serverUrl is provided, customize default connection endpoint in extension
+    if (serverUrl && typeof serverUrl === 'string') {
+      const isJs = file.name.endsWith('.js');
+      const isHtml = file.name.endsWith('.html');
+      if (isJs || isHtml) {
+        let str = content.toString('utf8');
+        str = str.replace(/http:\/\/localhost:3000/g, serverUrl);
+        content = Buffer.from(str, 'utf8');
+      }
+    }
+
+    if (file.name === 'manifest.json') {
+      const manifest = JSON.parse(content.toString('utf8'));
+      if (serverUrl && typeof serverUrl === 'string') {
+        const pattern = `${serverUrl.replace(/\/+$/, '')}/*`;
+        if (manifest.host_permissions && !manifest.host_permissions.includes(pattern)) {
+          manifest.host_permissions.push(pattern);
         }
-      };
+      }
+      if (browserTarget === 'firefox') {
+        // Add Firefox Gecko compatibility settings and background.scripts fallback
+        manifest.background = {
+          scripts: ['background/service-worker.js'],
+          service_worker: 'background/service-worker.js'
+        };
+        manifest.browser_specific_settings = {
+          gecko: {
+            id: 'scratch-ai@scratch-community.org',
+            strict_min_version: '109.0'
+          }
+        };
+      }
       return {
         name: 'manifest.json',
         data: Buffer.from(JSON.stringify(manifest, null, 2), 'utf8')
       };
     }
-    return file;
+
+    return {
+      name: file.name,
+      data: content
+    };
   });
 
   return createZipBuffer(files);

@@ -1,7 +1,10 @@
 {
-  "name": "scratch-data-base",
+  "name": "scratch-ai-detector",
   "version": "1.0.0",
-  "description": "Cao AI Detector - Scratch Chrome Extension & Centralized Backend",
+  "description": "Scratch AI Detector - Browser Extension & Centralized Backend",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "start": "cd backend && npm start",
     "dev": "cd backend && npm run dev",

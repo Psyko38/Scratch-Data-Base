@@ -1,21 +1,22 @@
-# Cao AI Detector – Scratch Project AI Classifier
+# Scratch AI – Scratch Project AI Classifier
 
-[![Node.js Tests](https://img.shields.io/badge/tests-22%20passed-brightgreen.svg)]()
+[![Node.js Tests](https://img.shields.io/badge/tests-30%20passed-brightgreen.svg)]()
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue.svg)]()
-[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.0.0-green.svg)]()
+[![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.5.0-green.svg)]()
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
-> A collaborative, community-driven AI detection system for Scratch projects ([scratch.mit.edu](https://scratch.mit.edu)). Pairs a modern Manifest V3 Chrome Extension with a centralized Node.js backend, transactional SQLite database, and an administrator moderation dashboard.
+> A collaborative, community-driven AI detection system for Scratch projects ([scratch.mit.edu](https://scratch.mit.edu)). Pairs a modern Manifest V3 Browser Extension (Chrome & Firefox) with a centralized Node.js backend, transactional SQLite database, public Community Web Explorer, and an administrator moderation dashboard.
 
 ---
 
 ## 🌟 Key Features
 
-### 🧩 Chrome Extension (Frontend)
+### 🧩 Browser Extension (Chrome & Firefox)
 - **Automatic Project Detection**: Detects Scratch project IDs from URLs like `https://scratch.mit.edu/projects/123456789/` instantly.
 - **Clean Voting Popup**:
   - Two intuitive voting options: 🤖 **AI-generated** vs 👤 **Human-created**.
-  - Highlights user's active choice and allows vote updating.
+  - Highlights user's active choice and allows seamless vote updating.
   - Live community distribution bar and percentage breakdown.
   - Community verdict: *AI-generated*, *Human-created*, *Undetermined*, or *Insufficient data*.
   - Clear community opinion disclaimer.
@@ -24,11 +25,12 @@
 - **Dark & Light Mode**: Built-in theme switch with system auto-detection.
 - **Configurable Backend**: Options page to set custom backend URLs and test connectivity.
 
-### 🌐 Public Community Explorer (Non-Admin Web Page)
-- Accessible publicly at `http://localhost:3000/` and `/explore` without requiring login.
+### 🌐 Public Community Explorer (Web Page)
+- Accessible publicly at `/` and `/explore` without requiring login.
 - **Read-Only Community Results**: View global metrics, most voted Scratch projects, and recent voting activity.
 - **Project Inspection**: Look up any Scratch project to view verdict breakdowns and vote logs with privacy-masked voter UUIDs.
 - **Open CSV Data Download**: One-click download of all votes or project statistics as CSV without admin privileges.
+- **Direct Extension Download**: Download ready-to-use Chrome (`.zip`) and Firefox packages pre-configured with the server's endpoint.
 - Authentic Scratch theme with `#855cd6` purple navbar and `#4cbf56` / `#ec5959` indicators.
 
 ### ⚙️ Centralized Backend Server (Node.js)
@@ -38,6 +40,7 @@
 - **Rate Limiting**: IP-based rate limiting on vote submissions (120 req / 15 min) and admin login attempts (10 attempts / 15 min).
 - **Ban Protection**: Instantly prevents banned users from casting votes.
 - **Self-Healing Statistics**: Projects table counters are calculated transactionally from actual records, eliminating drift.
+- **Graceful Shutdown**: Intercepts `SIGINT`/`SIGTERM` to cleanly flush WAL writes and close database connections.
 
 ### 🛡️ Administrator Dashboard
 - **Web-Based Console** at `/admin`.
@@ -71,201 +74,145 @@ $$\text{Human percentage} = \left(\frac{\text{Human votes}}{\text{Total votes}}\
 ```
 Scratch-Data-Base/
 ├── backend/
-│   ├── server.js               # Application entry point
+│   ├── server.js               # Application entry point with graceful shutdown
 │   ├── src/
-│   │   ├── app.js              # Express app setup and middleware
+│   │   ├── app.js              # Express app setup, rate-limiting & middleware
 │   │   ├── config.js           # Environment and path configurations
 │   │   ├── db/
 │   │   │   ├── schema.sql      # SQLite relational schema
-│   │   │   └── database.js    # Database engine and transaction wrapper
+│   │   │   └── database.js     # SQLite sync engine with WAL mode & transactions
 │   │   ├── middleware/
 │   │   │   ├── auth.js         # JWT & HTTP-only cookie admin auth
 │   │   │   ├── rateLimiter.js  # Sliding-window rate limiters
 │   │   │   └── validate.js     # Project ID and UUID validators
 │   │   ├── routes/
 │   │   │   ├── health.js       # GET /api/health
-│   │   │   ├── projects.js     # GET /api/projects/:projectId
+│   │   │   ├── projects.js     # GET /api/projects/:projectId & /batch
 │   │   │   ├── votes.js        # POST /api/votes
 │   │   │   ├── users.js        # GET /api/users/:userId/votes
-│   │   │   └── admin.js        # Admin auth, stats, moderation, CSV export
-│   │   └── services/
-│   │       └── verdict.js      # Voting formula and verdict rules
-│   ├── public/admin/           # Administrator Console SPA
-│   │   ├── index.html
-│   │   ├── admin.css
-│   │   └── admin.js
+│   │   │   ├── publicStats.js  # GET /api/stats, /api/export/csv, /api/extension/download
+│   │   │   └── admin.js        # Admin auth, moderation, and management
+│   │   ├── services/
+│   │   │   └── verdict.js      # Voting formula and verdict rules
+│   │   └── utils/
+│   │       └── zipBuilder.js   # Extension package generator
+│   ├── public/
+│   │   ├── admin/              # Administrator Console
+│   │   └── explorer/           # Public Community Web Explorer
 │   ├── scripts/
 │   │   ├── init-db.js          # Database initialization
-│   │   └── seed.js             # Seed sample Scratch projects and votes
-│   └── tests/                  # Node.js native test runner test suite
-│       ├── api.test.js         # REST API & moderation integration tests
-│       └── verdict.test.js     # Algorithm unit tests
-├── extension/                  # Chrome Manifest V3 Extension
-│   ├── manifest.json
-│   ├── background/
-│   │   └── service-worker.js   # Background worker and tab listener
-│   ├── popup/
-│   │   ├── popup.html          # Clean popup UI
-│   │   ├── popup.css           # Scratch-inspired styling (dark/light)
-│   │   └── popup.js            # Automatic detection & voting client
-│   ├── content/
-│   │   ├── content.js          # On-page injected widget
-│   │   └── content.css         # Scoped styles for Scratch website
-│   ├── options/
-│   │   ├── options.html        # Settings (backend URL, UUID, theme)
-│   │   ├── options.css
-│   │   └── options.js
-│   └── icons/                  # 16px, 48px, 128px icons and SVG
-├── docs/
-│   ├── API.md                  # Complete REST API specification
-│   └── ARCHITECTURE.md         # Architecture diagrams and specifications
+│   │   └── seed.js             # Optional test data seeder
+│   └── tests/
+│       ├── api.test.js         # REST API & integration tests (30 tests)
+│       └── verdict.test.js     # Verdict unit tests
+├── data/                       # Production SQLite data directory (.gitkeep)
+├── Dockerfile                  # Production container image (Node 22 Alpine)
+├── docker-compose.yml          # Production stack configuration
+├── extension/                  # Manifest V3 Extension (Chrome & Firefox)
+├── docs/                       # Architecture & API documentation
 ├── .env.example                # Example environment variables
-├── package.json                # Root convenience scripts
+├── package.json                # Root package & scripts
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚢 Production Deployment
 
-### Prerequisites
-- **Node.js**: v20+ (v22+ or v26 recommended with built-in SQLite support)
-- **Google Chrome** (or Chromium-based browser)
+### Option 1: Docker & Docker Compose (Recommended)
 
----
-
-### 1. Backend Setup
-
-1. **Clone the repository**:
+1. **Clone the repository on your server**:
    ```bash
    git clone https://github.com/matteocao/Scratch-Data-Base.git
    cd Scratch-Data-Base
    ```
 
-2. **Install backend dependencies**:
+2. **Create your `.env` configuration file**:
+   ```bash
+   cp .env.example .env
+   nano .env
+   ```
+   *Make sure to change `JWT_SECRET` (generate using `openssl rand -hex 32`) and set a strong `ADMIN_PASSWORD`.*
+
+3. **Start the service in detached mode**:
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. **Verify container health**:
+   ```bash
+   docker compose ps
+   curl http://localhost:3000/api/health
+   ```
+   The database is stored under `./data/` on the host machine and is persisted across restarts and container updates.
+
+---
+
+### Option 2: Direct Node.js / PM2
+
+> **Requirement**: Node.js **>= 22.5.0** (required for native `node:sqlite`).
+
+1. **Install dependencies**:
    ```bash
    cd backend
-   npm install
+   npm install --omit=dev
    ```
 
-3. **Configure environment variables**:
+2. **Configure environment**:
    ```bash
    cp ../.env.example ../.env
+   nano ../.env
    ```
-   *(Default settings work out of the box with SQLite and port 3000)*.
 
-4. **Initialize and Seed the Database**:
+3. **Initialize the database (creates tables & initial admin account)**:
    ```bash
-   # Initialize tables and default admin account:
    npm run db:init
-
-   # (Optional) Seed realistic Scratch projects with sample votes:
-   npm run db:seed
    ```
 
-5. **Start the backend server**:
+4. **Run with PM2**:
    ```bash
-   # Production mode:
-   npm start
+   pm2 start server.js --name "scratch-ai-backend"
+   pm2 save
+   pm2 startup
+   ```
 
-   # Development mode with live reload:
+---
+
+## 🛠️ Development & Local Testing
+
+1. **Install dependencies**:
+   ```bash
+   cd backend && npm install
+   ```
+
+2. **Run tests**:
+   ```bash
+   npm test
+   ```
+
+3. **Start development server**:
+   ```bash
    npm run dev
    ```
-   The backend server will run at `http://localhost:3000`.
 
----
-
-### 2. Chrome Extension Setup
-
-1. Open **Google Chrome** and navigate to:
-   ```text
-   chrome://extensions/
-   ```
-2. Enable **Developer mode** in the top right corner.
-3. Click the **Load unpacked** button.
-4. Select the `extension/` directory from this repository:
-   ```text
-   /path/to/Scratch-Data-Base/extension
-   ```
-5. The extension **"Cao AI Detector – Scratch AI Classifier"** is now installed! Pin it to your Chrome toolbar for easy access.
-
----
-
-### 3. Testing on Scratch
-
-1. Visit any Scratch project:
-   - Example 1: `https://scratch.mit.edu/projects/1012849182/` (Seeded as AI-dominated)
-   - Example 2: `https://scratch.mit.edu/projects/984712391/` (Seeded as Human-dominated)
-   - Example 3: Any live Scratch project!
-2. Click the extension icon in the toolbar:
-   - The extension automatically detects the project ID.
-   - Shows existing AI vs Human vote distributions.
-   - Click **🤖 AI-generated** or **👤 Human-created** to vote.
-   - Notice how your vote updates the community stats in real-time.
-3. Look at the bottom-right corner of the Scratch webpage:
-   - Notice the floating Cao AI widget displaying the verdict directly on the page!
-
----
-
-### 4. Administrator Console
-
-1. In your browser, navigate to:
-   ```text
-   http://localhost:3000/admin
-   ```
-2. Sign in using the default administrator credentials:
-   - **Username**: `admin`
-   - **Password**: `AdminPass123!` *(or the password set in `.env`)*
-3. Explore the dashboard:
-   - View total users, projects, and AI vs Human ratio.
-   - Search any Scratch project by numeric ID to inspect individual voters.
-   - Remove fraudulent votes or ban abusive users.
-   - Export vote or project data to CSV (`/api/admin/export/csv`).
-
----
-
-## 🧪 Automated Testing
-
-The project includes unit and integration tests covering API endpoints, duplicate vote prevention, vote updating, ban enforcement, admin authentication, and verdict calculations:
-
-```bash
-# Run tests from root:
-npm test
-
-# Or run tests directly inside backend:
-cd backend && npm test
-```
-
-Expected output:
-```text
-✔ Health Check
-✔ Project Statistics (Unvoted project)
-✔ POST /api/votes should create a new AI vote
-✔ POST /api/votes with same vote should return unchanged and not increment total
-✔ POST /api/votes changing vote to "human" should update vote and adjust stats accurately
-✔ Multiple distinct users voting reaches threshold and determines verdict
-✔ POST /api/admin/login should succeed with valid credentials and return token & cookie
-✔ POST /api/admin/users/:userId/ban should ban user and reject future votes
-✔ DELETE /api/admin/votes/:voteId should delete fraudulent vote and recalculate
-✔ GET /api/admin/export/csv should export CSV data
-✔ POST /api/admin/projects/:projectId/reset should reset project statistics to zero
-✔ Verdict Algorithm Tests (Insufficient data, AI-generated, Human-created, Undetermined)
-ℹ tests 22 passed (0 failed)
-```
+4. **Install Browser Extension locally**:
+   - Open Chrome and navigate to `chrome://extensions/`.
+   - Enable **Developer mode**.
+   - Click **Load unpacked** and select the `extension/` directory.
 
 ---
 
 ## 🔒 Security Best Practices
 
-- **Zero Passwords in Extension**: The Chrome extension contains zero admin passwords or secrets.
-- **Admin Password Hashing**: Passwords stored using salted bcrypt.
-- **HTTP-Only Cookies**: Protected against XSS token extraction.
+- **Zero Passwords in Extension**: The browser extension contains zero admin passwords or secrets.
+- **Admin Password Hashing**: Passwords stored using salted bcrypt (`10` salt rounds).
+- **HTTP-Only Cookies**: Protected against XSS token extraction with Bearer header fallback.
 - **Database Unique Constraints**: `UNIQUE(user_id, project_id)` guarantees one vote per user per project.
 - **Input Sanitization**: Numeric Scratch ID regex and UUID v4 validation prevent injection attacks.
-- **Rate Limiting**: Vote flooding and brute force login attempts are automatically throttled.
+- **Reverse Proxy Ready**: `app.set('trust proxy', 1)` enabled in production for accurate rate limiting behind Nginx/Caddy/Cloudflare.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License.
