@@ -71,6 +71,50 @@ router.get('/me', requireAdminAuth, (req, res) => {
 });
 
 /**
+ * GET /api/admin/users
+ * List all registered users with their vote counts and ban status
+ */
+router.get('/users', requireAdminAuth, (req, res) => {
+  try {
+    const users = db.queryAll(`
+      SELECT
+        u.id as user_id,
+        u.is_banned,
+        u.created_at,
+        u.updated_at,
+        COUNT(v.id) as total_votes,
+        COALESCE(SUM(CASE WHEN v.vote = 'ai' THEN 1 ELSE 0 END), 0) as ai_votes,
+        COALESCE(SUM(CASE WHEN v.vote = 'human' THEN 1 ELSE 0 END), 0) as human_votes
+      FROM users u
+      LEFT JOIN votes v ON u.id = v.user_id
+      GROUP BY u.id
+      ORDER BY u.updated_at DESC
+    `);
+
+    const totalUsers = users.length;
+    const bannedUsers = users.filter(u => u.is_banned).length;
+
+    res.json({
+      totalUsers,
+      bannedUsers,
+      activeUsers: totalUsers - bannedUsers,
+      users: users.map(u => ({
+        userId: u.user_id,
+        isBanned: Boolean(u.is_banned),
+        totalVotes: u.total_votes || 0,
+        aiVotes: u.ai_votes || 0,
+        humanVotes: u.human_votes || 0,
+        createdAt: u.created_at,
+        updatedAt: u.updated_at
+      }))
+    });
+  } catch (err) {
+    console.error('Error fetching admin users:', err);
+    res.status(500).json({ error: 'Failed to retrieve users list.' });
+  }
+});
+
+/**
  * GET /api/admin/stats
  * Overview dashboard metrics
  */

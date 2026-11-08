@@ -13,9 +13,9 @@
   function showStatus(text, isError = false) {
     statusMsg.textContent = text;
     statusMsg.style.display = 'block';
-    statusMsg.style.background = isError ? 'rgba(207, 34, 46, 0.1)' : 'rgba(26, 127, 55, 0.1)';
-    statusMsg.style.color = isError ? '#cf222e' : '#1a7f37';
-    statusMsg.style.border = `1px solid ${isError ? '#cf222e' : '#1a7f37'}`;
+    statusMsg.style.background = isError ? 'rgba(236, 89, 89, 0.14)' : 'rgba(76, 191, 86, 0.14)';
+    statusMsg.style.color = isError ? '#b82d2d' : '#287a38';
+    statusMsg.style.border = `1px solid ${isError ? 'rgba(236, 89, 89, 0.4)' : 'rgba(76, 191, 86, 0.4)'}`;
     setTimeout(() => {
       statusMsg.style.display = 'none';
     }, 4000);
@@ -32,7 +32,7 @@
   // Save settings
   settingsForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    let url = backendUrlInput.value.trim().replace(/\/+$/, '');
+    const url = (backendUrlInput.value || DEFAULT_BACKEND_URL).trim().replace(/\/+$/, '');
     const theme = themeSelect.value;
 
     await chrome.storage.local.set({
@@ -40,12 +40,13 @@
       theme: theme
     });
 
-    showStatus('Settings saved successfully!');
+    backendUrlInput.value = url;
+    showStatus('✅ Settings saved successfully!', false);
   });
 
   // Test backend connection
   testConnectionBtn.addEventListener('click', async () => {
-    let url = backendUrlInput.value.trim().replace(/\/+$/, '');
+    const url = (backendUrlInput.value || DEFAULT_BACKEND_URL).trim().replace(/\/+$/, '');
     testConnectionBtn.disabled = true;
     testConnectionBtn.textContent = 'Testing...';
 
@@ -53,12 +54,12 @@
       const res = await fetch(`${url}/api/health`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      showStatus(`Connection successful! Server status: ${data.status} (database: ${data.database})`, false);
+      showStatus(`✅ Connection successful! Server status: ${data.status} (${data.counts?.votes || 0} votes)`, false);
     } catch (err) {
-      showStatus(`Connection failed: ${err.message}. Is the backend running at ${url}?`, true);
+      showStatus(`❌ Connection failed: ${err.message}. Make sure the server is running at ${url}`, true);
     } finally {
       testConnectionBtn.disabled = false;
-      testConnectionBtn.textContent = 'Test Connection';
+      testConnectionBtn.textContent = '🔌 Test Connection';
     }
   });
 
@@ -66,7 +67,7 @@
   copyIdBtn.addEventListener('click', () => {
     if (userIdDisplay.value) {
       navigator.clipboard.writeText(userIdDisplay.value);
-      showStatus('Voter UUID copied to clipboard!', false);
+      showStatus('📋 UUID copied to clipboard!', false);
     }
   });
 

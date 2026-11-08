@@ -4,37 +4,53 @@
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: #f9f9f9;
+  background-color: #fcfcfc;
   color: #323742;
   margin: 0;
-  padding: 32px 16px;
+  padding: 24px 16px;
   line-height: 1.5;
 }
 
 .options-card {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  padding: 24px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
   max-width: 520px;
   margin: 0 auto;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .options-header {
+  background: #f2f2f2;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 22px;
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.logo-bubble {
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: -0.4px;
+  color: #ffab19;
+  background: #ffffff;
+  padding: 3px 10px;
+  border-radius: 8px;
+  border: 2px solid #ffab19;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 
 .options-header h1 {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #855cd6;
+  color: #323742;
   margin: 0;
+}
+
+.options-body {
+  padding: 22px;
 }
 
 .form-group {
@@ -43,7 +59,7 @@ body {
 
 label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
   margin-bottom: 6px;
   color: #575e75;
@@ -52,9 +68,9 @@ label {
 .input-text, select {
   width: 100%;
   padding: 9px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 0.88rem;
   box-sizing: border-box;
   font-family: inherit;
   color: #323742;
@@ -65,7 +81,7 @@ label {
 .input-text:focus, select:focus {
   outline: none;
   border-color: #855cd6;
-  box-shadow: 0 0 0 4px rgba(133, 92, 214, 0.35);
+  box-shadow: 0 0 0 3px rgba(133, 92, 214, 0.35);
 }
 
 .btn-group {
@@ -76,9 +92,9 @@ label {
 }
 
 .btn {
-  padding: 9px 16px;
-  border-radius: 4px;
-  font-size: 0.88rem;
+  padding: 9px 15px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   border: none;
@@ -86,32 +102,30 @@ label {
   transition: all 0.15s ease;
 }
 
-/* Primary Orange Button (Scratch Remix / Action) */
 .btn-primary {
-  background: #ffab19;
+  background: #855cd6;
   color: #ffffff;
 }
 
 .btn-primary:hover {
-  background: #cf8b17;
+  background: #714eb7;
 }
 
 .btn-secondary {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  color: #575e75;
+  background: #f2f2f2;
+  border: 1px solid #d9d9d9;
+  color: #323742;
 }
 
 .btn-secondary:hover {
-  background: #e9f1fc;
-  color: #855cd6;
+  background: #e6e6e6;
 }
 
 .status-msg {
   margin-top: 16px;
   padding: 10px 14px;
-  border-radius: 4px;
-  font-size: 0.84rem;
-  font-weight: 600;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
   display: none;
 }

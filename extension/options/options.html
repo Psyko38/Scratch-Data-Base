@@ -9,47 +9,49 @@
 <body>
   <div class="options-card">
     <div class="options-header">
-      <span style="font-size: 1.8rem;">🐱</span>
+      <span class="logo-bubble">Cao AI</span>
       <div>
-        <h1>Cao AI Detector Settings</h1>
-        <p style="font-size: 0.82rem; color: #57606a;">Extension configuration & user identity</p>
+        <h1>Extension Settings</h1>
+        <p style="font-size: 0.82rem; color: #575e75;">Server configuration & anonymous voter identity</p>
       </div>
     </div>
 
-    <form id="settingsForm">
-      <div class="form-group">
-        <label for="backendUrlInput">Backend Server URL</label>
-        <input type="url" id="backendUrlInput" class="input-text" placeholder="http://localhost:3000" required>
-        <div style="font-size: 0.75rem; color: #6e7681; margin-top: 4px;">
-          Points to your central Node.js backend. Default: <code>http://localhost:3000</code>
+    <div class="options-body">
+      <form id="settingsForm">
+        <div class="form-group">
+          <label for="backendUrlInput">Backend Server URL</label>
+          <input type="url" id="backendUrlInput" class="input-text" placeholder="http://localhost:3000" required>
+          <div style="font-size: 0.75rem; color: #73798c; margin-top: 4px;">
+            Address of your central Node.js backend (Default: <code>http://localhost:3000</code>)
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="themeSelect">Appearance</label>
-        <select id="themeSelect">
-          <option value="auto">System Default (Auto)</option>
-          <option value="light">Light Mode</option>
-          <option value="dark">Dark Mode</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Your Anonymous Voter ID (UUID)</label>
-        <input type="text" id="userIdDisplay" class="input-text" readonly style="font-family: monospace; background: #eef2f7; color: #57606a;">
-        <div style="font-size: 0.75rem; color: #6e7681; margin-top: 4px;">
-          Unique identifier stored locally in Chrome Storage. No account required.
+        <div class="form-group">
+          <label for="themeSelect">Popup Appearance</label>
+          <select id="themeSelect">
+            <option value="auto">System Default (Auto)</option>
+            <option value="light">Light Mode (Classic Scratch)</option>
+            <option value="dark">Dark Mode</option>
+          </select>
         </div>
-      </div>
 
-      <div class="btn-group">
-        <button type="submit" class="btn btn-primary">Save Settings</button>
-        <button type="button" id="testConnectionBtn" class="btn btn-secondary">Test Connection</button>
-        <button type="button" id="copyIdBtn" class="btn btn-secondary">Copy UUID</button>
-      </div>
-    </form>
+        <div class="form-group">
+          <label>Your Anonymous Voter ID (UUID)</label>
+          <input type="text" id="userIdDisplay" class="input-text" readonly style="font-family: monospace; background: #f2f4f8; color: #cf8b17; font-weight: 700;">
+          <div style="font-size: 0.75rem; color: #73798c; margin-top: 4px;">
+            Unique identifier stored locally in your browser. No account required.
+          </div>
+        </div>
 
-    <div id="statusMsg" class="status-msg"></div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">💾 Save Settings</button>
+          <button type="button" id="testConnectionBtn" class="btn btn-secondary">🔌 Test Connection</button>
+          <button type="button" id="copyIdBtn" class="btn btn-secondary">📋 Copy UUID</button>
+        </div>
+      </form>
+
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
   </div>
 
   <script src="options.js"></script>

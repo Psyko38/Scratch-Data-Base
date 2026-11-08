@@ -1,89 +1,55 @@
 /* ==========================================================================
-   AUTHENTIC SCRATCH DESIGN SYSTEM & TOKENS (scratch.mit.edu)
+   AUTHENTIC SCRATCH DESIGN SYSTEM & TOKENS - EXTENSION POPUP
    ========================================================================== */
 :root {
-  /* Scratch Brand Colors */
   --scratch-purple: #855cd6;
   --scratch-purple-dark: #714eb7;
-  --scratch-purple-active: #7854c0;
-  --scratch-purple-tint: rgba(133, 92, 214, 0.15);
   --scratch-purple-ring: rgba(133, 92, 214, 0.35);
 
   --scratch-blue: #4d97ff;
-  --scratch-blue-dark: #4280d7;
-  --scratch-blue-border: #3373cc;
-  --scratch-blue-tint: rgba(77, 151, 255, 0.1);
-
   --scratch-orange: #ffab19;
   --scratch-orange-dark: #cf8b17;
-  --scratch-orange-hover: #e69a17;
   --scratch-orange-tint: rgba(244, 157, 37, 0.15);
 
-  /* Green Flag & Stop Sign */
   --scratch-green: #4cbf56;
-  --scratch-green-stroke: #45993d;
   --scratch-green-tint: rgba(76, 191, 86, 0.15);
   --scratch-green-text: #287a38;
 
   --scratch-stop: #ec5959;
-  --scratch-stop-stroke: #b84848;
   --scratch-stop-tint: rgba(236, 89, 89, 0.15);
   --scratch-stop-text: #b82d2d;
 
-  /* Neutrals & Surfaces */
-  --scratch-white: #ffffff;
-  --scratch-bg-main: #f9f9f9;
-  --scratch-bg-pane: #e9f1fc;
+  --scratch-bg-main: #fcfcfc;
   --scratch-bg-card: #ffffff;
-  --scratch-bg-hover: #f2f5fa;
+  --scratch-bg-box-header: #f2f2f2;
+  --scratch-border: #d9d9d9;
+  --scratch-border-subtle: rgba(0, 0, 0, 0.08);
 
-  /* Typography */
   --scratch-text-primary: #575e75;
   --scratch-text-dark: #323742;
   --scratch-text-muted: #73798c;
-  --scratch-text-dim: #9aa1b3;
 
-  /* Borders & Shadows */
-  --scratch-border: rgba(0, 0, 0, 0.15);
-  --scratch-border-subtle: rgba(0, 0, 0, 0.08);
-  --scratch-shadow-nav: 0 0 3px 0 rgba(0, 0, 0, 0.25);
-  --scratch-shadow-card: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
-
-  /* Border Radii */
   --scratch-radius-sm: 4px;
   --scratch-radius-md: 8px;
-  --scratch-radius-lg: 16px;
+  --scratch-radius-lg: 10px;
   --scratch-radius-pill: 20px;
-  --scratch-radius-full: 9999px;
 
-  /* Extension Semantic Mappings */
-  --bg-primary: var(--scratch-bg-main);
-  --bg-card: var(--scratch-white);
-  --text-main: var(--scratch-text-dark);
-  --text-body: var(--scratch-text-primary);
   --ai-color: var(--scratch-stop);
-  --ai-border: var(--scratch-stop-stroke);
-  --ai-bg: var(--scratch-stop-tint);
   --ai-text: var(--scratch-stop-text);
   --human-color: var(--scratch-green);
-  --human-border: var(--scratch-green-stroke);
-  --human-bg: var(--scratch-green-tint);
   --human-text: var(--scratch-green-text);
 }
 
 [data-theme="dark"] {
   --scratch-bg-main: #18191f;
   --scratch-bg-card: #22232c;
-  --scratch-bg-hover: #2d2e3a;
-  --scratch-border: rgba(255, 255, 255, 0.15);
+  --scratch-bg-box-header: #2a2c37;
+  --scratch-border: rgba(255, 255, 255, 0.14);
   --scratch-border-subtle: rgba(255, 255, 255, 0.08);
   --scratch-text-dark: #f0f3fc;
   --scratch-text-primary: #bcc2d6;
   --scratch-text-muted: #8d93a8;
   --scratch-purple: #7854c0;
-  --scratch-purple-active: #6744ad;
-  --scratch-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.4);
-
   --ai-text: #ff7b72;
   --human-text: #56d364;
 }
@@ -99,7 +65,7 @@ body {
   background-color: var(--scratch-bg-main);
   color: var(--scratch-text-dark);
   width: 380px;
-  min-height: 440px;
+  min-height: 430px;
   line-height: 1.45;
   user-select: none;
   overflow-x: hidden;
@@ -110,38 +76,38 @@ body {
 .header {
   background-color: var(--scratch-purple);
   color: #ffffff;
-  height: 50px;
-  padding: 0 16px;
+  height: 48px;
+  padding: 0 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: var(--scratch-shadow-nav);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  text-decoration: none;
 }
 
-.brand-icon {
-  font-size: 1.35rem;
-  line-height: 1;
+.logo-bubble {
+  font-weight: 900;
+  font-size: 0.92rem;
+  letter-spacing: -0.4px;
+  color: var(--scratch-orange);
+  background: #ffffff;
+  padding: 2px 8px;
+  border-radius: 7px;
+  border: 2px solid var(--scratch-orange);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
 }
 
 .brand-title {
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: 0.2px;
-}
-
-.brand-subtitle {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-  margin-left: 2px;
 }
 
 .header-actions {
@@ -150,48 +116,64 @@ body {
 }
 
 .icon-btn {
-  background: rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--scratch-radius-sm);
   color: #ffffff;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  text-decoration: none;
   transition: background 0.15s ease;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 
 .icon-btn:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.28);
 }
 
 /* Inner Container */
 .popup-container {
   display: flex;
   flex-direction: column;
-  padding: 14px 16px 16px 16px;
+  padding: 12px 14px 14px 14px;
 }
 
-/* Scratch Project Banner */
+/* Scratch Project Banner with Thumbnail */
 .project-banner {
   background: var(--scratch-bg-card);
   border: 1px solid var(--scratch-border);
-  border-radius: var(--scratch-radius-md);
-  padding: 9px 12px;
+  border-radius: var(--scratch-radius-lg);
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-  box-shadow: var(--scratch-shadow-card);
+}
+
+.project-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-thumb {
+  width: 56px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--scratch-border);
+  background: linear-gradient(135deg, #855cd6 0%, #4d97ff 100%);
 }
 
 .project-id-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--scratch-text-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--scratch-text-muted);
+  text-transform: uppercase;
 }
 
 .project-id-val {
@@ -205,25 +187,43 @@ body {
   color: var(--scratch-orange);
 }
 
-/* Scratch Card Container */
-.card {
+.scratch-ext-link {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--scratch-blue);
+  text-decoration: none;
+}
+
+.scratch-ext-link:hover {
+  text-decoration: underline;
+}
+
+/* Authentic Scratch Content Box */
+.scratch-box {
   background-color: var(--scratch-bg-card);
   border: 1px solid var(--scratch-border);
-  border-radius: var(--scratch-radius-md);
-  padding: 14px;
+  border-radius: var(--scratch-radius-lg);
   margin-bottom: 12px;
-  box-shadow: var(--scratch-shadow-card);
+  overflow: hidden;
 }
 
-.question-text {
-  font-size: 0.95rem;
+.scratch-box-header {
+  background-color: var(--scratch-bg-box-header);
+  border-bottom: 1px solid var(--scratch-border);
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
   font-weight: 700;
-  text-align: center;
-  margin-bottom: 12px;
-  color: var(--scratch-text-dark);
+  color: var(--scratch-text-primary);
 }
 
-/* Voting Buttons Styled after Scratch Action Elements */
+.scratch-box-body {
+  padding: 12px;
+}
+
+/* Voting Buttons */
 .vote-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -236,8 +236,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 10px;
+  gap: 4px;
+  padding: 10px 8px;
   border-radius: var(--scratch-radius-md);
   cursor: pointer;
   border: 2px solid var(--scratch-border);
@@ -245,25 +245,24 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   font-family: inherit;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--scratch-text-dark);
 }
 
-.btn-vote:hover {
+.btn-vote:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-vote:not(:disabled):hover {
   transform: translateY(-2px);
-  box-shadow: var(--scratch-shadow-card);
 }
 
-.btn-vote:active {
-  transform: translateY(0);
-}
-
-/* AI Vote Button (Scratch Stop Sign style) */
 .btn-vote-ai {
   border-color: rgba(236, 89, 89, 0.4);
 }
 
-.btn-vote-ai:hover {
+.btn-vote-ai:not(:disabled):hover {
   background-color: var(--scratch-stop-tint);
   border-color: var(--scratch-stop);
 }
@@ -271,16 +270,15 @@ body {
 .btn-vote-ai.active-vote {
   background-color: var(--scratch-stop-tint);
   border-color: var(--scratch-stop);
-  box-shadow: 0 0 0 4px rgba(236, 89, 89, 0.35);
+  box-shadow: 0 0 0 3px rgba(236, 89, 89, 0.3);
   color: var(--ai-text);
 }
 
-/* Human Vote Button (Scratch Green Flag style) */
 .btn-vote-human {
   border-color: rgba(76, 191, 86, 0.4);
 }
 
-.btn-vote-human:hover {
+.btn-vote-human:not(:disabled):hover {
   background-color: var(--scratch-green-tint);
   border-color: var(--scratch-green);
 }
@@ -288,42 +286,26 @@ body {
 .btn-vote-human.active-vote {
   background-color: var(--scratch-green-tint);
   border-color: var(--scratch-green);
-  box-shadow: 0 0 0 4px rgba(76, 191, 86, 0.35);
+  box-shadow: 0 0 0 3px rgba(76, 191, 86, 0.3);
   color: var(--human-text);
 }
 
 .user-vote-hint {
   text-align: center;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--scratch-text-primary);
   min-height: 18px;
 }
 
-/* Scratch Community Statistics */
-.stats-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.stats-title {
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--scratch-text-primary);
-}
-
 .total-votes-count {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--scratch-text-dark);
+  color: var(--scratch-purple);
 }
 
-/* Authentic Scratch Progress Bar */
+/* Progress Bar */
 .progress-bar-wrap {
-  height: 12px;
+  height: 10px;
   background: var(--scratch-bg-main);
   border-radius: var(--scratch-radius-pill);
   overflow: hidden;
@@ -347,9 +329,9 @@ body {
 .stats-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* Community Verdict Box */
@@ -357,7 +339,7 @@ body {
   background: var(--scratch-bg-main);
   border: 1px solid var(--scratch-border-subtle);
   border-radius: var(--scratch-radius-sm);
-  padding: 8px 12px;
+  padding: 7px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -368,9 +350,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: var(--scratch-radius-pill);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
@@ -399,7 +381,7 @@ body {
 }
 
 .disclaimer-text {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--scratch-text-muted);
   text-align: center;
   line-height: 1.35;
@@ -409,27 +391,35 @@ body {
 .empty-state {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 24px 16px;
   gap: 12px;
+  padding: 8px 0;
+}
+
+.empty-hero-box {
+  background: var(--scratch-bg-card);
+  border: 1px solid var(--scratch-border);
+  border-radius: var(--scratch-radius-lg);
+  padding: 20px 14px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .empty-icon {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 .empty-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--scratch-text-dark);
 }
 
 .empty-sub {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--scratch-text-primary);
-  max-width: 280px;
 }
 
 /* Quick Lookup Form */
@@ -437,7 +427,6 @@ body {
   display: flex;
   width: 100%;
   gap: 6px;
-  margin-top: 10px;
 }
 
 .lookup-input {
@@ -447,7 +436,7 @@ body {
   border: 1px solid var(--scratch-border);
   border-radius: var(--scratch-radius-sm);
   color: var(--scratch-text-dark);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   outline: none;
   font-family: inherit;
 }
@@ -458,28 +447,29 @@ body {
 }
 
 .btn-lookup {
-  padding: 8px 14px;
-  background: var(--scratch-orange);
+  padding: 8px 12px;
+  background: var(--scratch-purple);
   color: #ffffff;
   border: none;
   border-radius: var(--scratch-radius-sm);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.15s ease;
   font-family: inherit;
 }
 
 .btn-lookup:hover {
-  background: var(--scratch-orange-dark);
+  background: var(--scratch-purple-dark);
 }
 
 /* Alerts */
 .alert-banner {
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: var(--scratch-radius-sm);
-  font-size: 0.78rem;
-  margin-bottom: 12px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 10px;
   display: none;
 }
 

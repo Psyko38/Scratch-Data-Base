@@ -60,6 +60,16 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.equal(res.status, 400);
       assert.match(res.body.error, /numeric digits/i);
     });
+
+    it('POST /api/projects/batch should return batch statistics for multiple project IDs', async () => {
+      const res = await request(app)
+        .post('/api/projects/batch')
+        .send({ projectIds: [testProjectId, '1000001'] });
+      assert.equal(res.status, 200);
+      assert.ok(res.body.projects);
+      assert.equal(res.body.projects[testProjectId].projectId, testProjectId);
+      assert.equal(res.body.projects['1000001'].totalVotes, 0);
+    });
   });
 
   describe('Voting and Duplicate Prevention', () => {
@@ -184,6 +194,16 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.ok(Array.isArray(res.body.recentVotes));
     });
 
+    it('GET /api/admin/users with Bearer token should return user management list', async () => {
+      const res = await request(app)
+        .get('/api/admin/users')
+        .set('Authorization', `Bearer ${adminToken}`);
+      assert.equal(res.status, 200);
+      assert.ok(typeof res.body.totalUsers === 'number');
+      assert.ok(Array.isArray(res.body.users));
+      assert.ok(res.body.users.length >= 1);
+    });
+
     it('GET /api/admin/projects/:projectId/history should return project vote history', async () => {
       const res = await request(app)
         .get(`/api/admin/projects/${testProjectId}/history`)
@@ -292,6 +312,20 @@ describe('Cao AI Detector API Integration Tests', () => {
       const exploreRes = await request(app).get('/explore');
       assert.equal(exploreRes.status, 200);
       assert.match(exploreRes.text, /Scratch AI Detection Community Explorer/);
+    });
+
+    it('GET /api/extension/download should serve Chrome and Firefox extension ZIP packages', async () => {
+      const chromeRes = await request(app).get('/api/extension/download?browser=chrome').buffer(true);
+      assert.equal(chromeRes.status, 200);
+      assert.match(chromeRes.headers['content-type'], /application\/zip/);
+      assert.match(chromeRes.headers['content-disposition'], /cao-ai-detector-chrome-extension\.zip/);
+      assert.ok(Number(chromeRes.headers['content-length']) > 1000);
+
+      const firefoxRes = await request(app).get('/api/extension/download?browser=firefox').buffer(true);
+      assert.equal(firefoxRes.status, 200);
+      assert.match(firefoxRes.headers['content-type'], /application\/zip/);
+      assert.match(firefoxRes.headers['content-disposition'], /cao-ai-detector-firefox-extension\.zip/);
+      assert.ok(Number(firefoxRes.headers['content-length']) > 1000);
     });
   });
 });

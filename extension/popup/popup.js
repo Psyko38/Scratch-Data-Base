@@ -12,6 +12,9 @@
   const emptyStateView = document.getElementById('emptyStateView');
   const alertBanner = document.getElementById('alertBanner');
 
+  const openExplorerBrandLink = document.getElementById('openExplorerBrandLink');
+  const openExplorerBtn = document.getElementById('openExplorerBtn');
+  const projectThumbImg = document.getElementById('projectThumbImg');
   const displayProjectId = document.getElementById('displayProjectId');
   const openInScratchLink = document.getElementById('openInScratchLink');
   const voteAiBtn = document.getElementById('voteAiBtn');
@@ -29,6 +32,10 @@
   const quickLookupInput = document.getElementById('quickLookupInput');
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const openOptionsBtn = document.getElementById('openOptionsBtn');
+
+  function normalizeUrl(url) {
+    return (url || DEFAULT_BACKEND_URL).trim().replace(/\/+$/, '');
+  }
 
   // Generate random UUID v4 if missing
   function generateUUID() {
@@ -51,7 +58,6 @@
     } else if (theme === 'light') {
       document.documentElement.removeAttribute('data-theme');
     } else {
-      // Auto: detect system preference
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.setAttribute('data-theme', 'dark');
       } else {
@@ -84,9 +90,9 @@
     }, 4000);
   }
 
-  // Extract Scratch Project ID from URL
+  // Extract Scratch Project ID from URL (ignore /editor)
   function extractProjectId(url) {
-    if (!url) return null;
+    if (!url || /\/projects\/\d+\/editor(\/|$)/i.test(url)) return null;
     const match = url.match(/scratch\.mit\.edu\/projects\/(\d+)/i);
     return match ? match[1] : null;
   }
@@ -95,7 +101,6 @@
   async function init() {
     await initTheme();
 
-    // 1. Ensure user ID exists in storage
     const stored = await chrome.storage.local.get(['userId', 'backendUrl']);
     if (stored.userId) {
       currentUserId = stored.userId;
@@ -104,11 +109,10 @@
       await chrome.storage.local.set({ userId: currentUserId });
     }
 
-    if (stored.backendUrl) {
-      backendUrl = stored.backendUrl;
-    }
+    backendUrl = normalizeUrl(stored.backendUrl);
+    if (openExplorerBrandLink) openExplorerBrandLink.href = backendUrl;
+    if (openExplorerBtn) openExplorerBtn.href = backendUrl;
 
-    // 2. Query active browser tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs && tabs[0];
       const pId = activeTab ? extractProjectId(activeTab.url) : null;
@@ -132,32 +136,42 @@
     activeProjectView.classList.remove('hidden');
     emptyStateView.classList.add('hidden');
 
-    displayProjectId.textContent = projectId;
+    displayProjectId.textContent = `#${projectId}`;
     openInScratchLink.href = `https://scratch.mit.edu/projects/${projectId}/`;
+
+    if (projectThumbImg) {
+      projectThumbImg.style.opacity = '1';
+      projectThumbImg.src = `https://uploads.scratch.mit.edu/get_image/project/${projectId}_282x210.png`;
+      projectThumbImg.onerror = () => {
+        projectThumbImg.style.opacity = '0.2';
+      };
+    }
 
     try {
       const apiUrl = `${backendUrl}/api/projects/${projectId}?userId=${encodeURIComponent(currentUserId)}`;
       const res = await fetch(apiUrl);
       if (!res.ok) {
-        throw new Error(`Server returned HTTP ${res.status}`);
+        throw new Error(`HTTP ${res.status}`);
       }
       const data = await res.json();
-      renderStats(data);
+      renderStats(data, data.userVote || null);
     } catch (err) {
       showAlert(`Cannot connect to backend (${backendUrl}). Make sure server is running.`, true);
       renderDefaultStats();
     }
   }
 
-  function renderStats(data) {
-    currentUserVote = data.userVote || null;
+  function renderStats(data, explicitUserVote) {
+    if (explicitUserVote !== undefined) {
+      currentUserVote = explicitUserVote;
+    } else if (data.userVote !== undefined) {
+      currentUserVote = data.userVote;
+    }
 
-    // Render numbers
     statTotalVotes.textContent = `${data.totalVotes} ${data.totalVotes === 1 ? 'vote' : 'votes'}`;
-    statAiVotes.textContent = `AI votes: ${data.aiVotes} (${data.aiPercentage}%)`;
-    statHumanVotes.textContent = `Human votes: ${data.humanVotes} (${data.humanPercentage}%)`;
+    statAiVotes.textContent = `🤖 AI: ${data.aiVotes} (${data.aiPercentage}%)`;
+    statHumanVotes.textContent = `👤 Human: ${data.humanVotes} (${data.humanPercentage}%)`;
 
-    // Render Progress Bar
     let aiRatio = 50;
     let humanRatio = 50;
     if (data.totalVotes > 0) {
@@ -167,8 +181,6 @@
     progressAi.style.width = `${aiRatio}%`;
     progressHuman.style.width = `${humanRatio}%`;
 
-    // Render Verdict Badge
-    verdictBadge.textContent = data.verdict;
     verdictBadge.className = 'verdict-badge';
     if (data.verdict === 'AI-generated') {
       verdictBadge.classList.add('verdict-ai');
@@ -181,10 +193,9 @@
       verdictBadge.innerHTML = '⚖️ Undetermined';
     } else {
       verdictBadge.classList.add('verdict-insufficient');
-      verdictBadge.innerHTML = '⏳ Insufficient data';
+      verdictBadge.innerHTML = '⏳ Insufficient data (&lt;5 votes)';
     }
 
-    // Update active voting button state
     voteAiBtn.classList.remove('active-vote');
     voteHumanBtn.classList.remove('active-vote');
 
@@ -195,17 +206,17 @@
       voteHumanBtn.classList.add('active-vote');
       userVoteStatus.innerHTML = `Your vote: <strong style="color: var(--human-color);">Human-created</strong> (Click AI to change)`;
     } else {
-      userVoteStatus.textContent = 'Vote to contribute to community verdict';
+      userVoteStatus.textContent = 'Vote to contribute to the community verdict';
     }
   }
 
   function renderDefaultStats() {
     statTotalVotes.textContent = '0 votes';
-    statAiVotes.textContent = 'AI votes: 0 (0%)';
-    statHumanVotes.textContent = 'Human votes: 0 (0%)';
+    statAiVotes.textContent = '🤖 AI: 0 (0%)';
+    statHumanVotes.textContent = '👤 Human: 0 (0%)';
     progressAi.style.width = '50%';
     progressHuman.style.width = '50%';
-    verdictBadge.textContent = 'Insufficient data';
+    verdictBadge.innerHTML = '⏳ Insufficient data (&lt;5 votes)';
     verdictBadge.className = 'verdict-badge verdict-insufficient';
   }
 
@@ -232,8 +243,17 @@
         throw new Error(data.error || 'Voting failed');
       }
 
-      renderStats(data.project);
+      // Pass data.userVote (returned on top-level of POST /api/votes) so button stays active!
+      renderStats(data.project, data.userVote || voteType);
       showAlert(`Vote recorded: ${voteType === 'ai' ? '🤖 AI-generated' : '👤 Human-created'}!`, false);
+
+      // Sync badge and content script on active Scratch tab
+      chrome.runtime.sendMessage({
+        type: 'CAO_VOTE_UPDATED',
+        projectId: currentProjectId,
+        project: data.project,
+        userVote: data.userVote || voteType
+      }).catch(() => {});
     } catch (err) {
       showAlert(err.message, true);
     } finally {
@@ -242,7 +262,6 @@
     }
   }
 
-  // Event Listeners
   voteAiBtn.addEventListener('click', () => submitVote('ai'));
   voteHumanBtn.addEventListener('click', () => submitVote('human'));
 

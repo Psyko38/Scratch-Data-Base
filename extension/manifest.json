@@ -35,7 +35,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://scratch.mit.edu/projects/*"
+        "*://scratch.mit.edu/*"
       ],
       "js": [
         "content/content.js"

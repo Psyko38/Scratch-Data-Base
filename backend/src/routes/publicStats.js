@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db/database');
 const { validateProjectIdParam } = require('../middleware/validate');
 const { calculateVerdict, formatProjectResponse } = require('../services/verdict');
+const { buildExtensionZip } = require('../utils/zipBuilder');
 
 function maskUUID(uuid) {
   if (!uuid || uuid.length < 8) return 'anonymous';
@@ -40,6 +41,26 @@ router.get('/stats', (req, res) => {
 
     const mostVotedProjects = mostVotedRaw.map(p => formatProjectResponse(p, p.project_id));
 
+    // Top AI-detected projects (up to 15)
+    const topAiRaw = db.queryAll(`
+      SELECT project_id, total_votes, ai_votes, human_votes, updated_at
+      FROM projects
+      WHERE ai_votes > human_votes AND ai_votes > 0
+      ORDER BY ai_votes DESC, total_votes DESC
+      LIMIT 15
+    `);
+    const topAiProjects = topAiRaw.map(p => formatProjectResponse(p, p.project_id));
+
+    // Top Human-created projects (up to 15)
+    const topHumanRaw = db.queryAll(`
+      SELECT project_id, total_votes, ai_votes, human_votes, updated_at
+      FROM projects
+      WHERE human_votes >= ai_votes AND human_votes > 0
+      ORDER BY human_votes DESC, total_votes DESC
+      LIMIT 15
+    `);
+    const topHumanProjects = topHumanRaw.map(p => formatProjectResponse(p, p.project_id));
+
     // Recent votes (top 25) with masked voter IDs for privacy
     const recentVotes = db.queryAll(`
       SELECT
@@ -64,6 +85,8 @@ router.get('/stats', (req, res) => {
         humanPercentage: globalVerdict.humanPercentage
       },
       mostVotedProjects,
+      topAiProjects,
+      topHumanProjects,
       recentVotes: recentVotes.map(v => ({
         projectId: v.project_id,
         scratchUrl: `https://scratch.mit.edu/projects/${v.project_id}/`,
@@ -170,6 +193,26 @@ router.get('/export/csv', (req, res) => {
   } catch (err) {
     console.error('Error generating public CSV export:', err);
     res.status(500).json({ error: 'Failed to generate CSV export.' });
+  }
+});
+
+/**
+ * GET /api/extension/download
+ * Download packaged Chrome or Firefox extension (.zip)
+ * Query param: ?browser=chrome | firefox
+ */
+router.get('/extension/download', (req, res) => {
+  const browser = req.query.browser === 'firefox' ? 'firefox' : 'chrome';
+  try {
+    const zipBuffer = buildExtensionZip(browser);
+    const filename = `cao-ai-detector-${browser}-extension.zip`;
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', zipBuffer.length);
+    return res.send(zipBuffer);
+  } catch (err) {
+    console.error('Error building extension ZIP:', err);
+    res.status(500).json({ error: 'Failed to package extension archive.' });
   }
 });
 

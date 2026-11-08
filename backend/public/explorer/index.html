@@ -9,133 +9,364 @@
 </head>
 <body>
   <!-- Authentic Scratch Top Navbar -->
-  <header class="navbar">
-    <a href="/" class="nav-brand">
-      <span>🐱</span>
-      <span>Cao AI Detector <span class="nav-brand-sub">Community Explorer</span></span>
-    </a>
-    <div class="nav-actions">
-      <button id="exportVotesBtn" class="btn btn-secondary btn-sm" title="Download all community votes as CSV">📥 Download Votes CSV</button>
-      <button id="exportProjectsBtn" class="btn btn-secondary btn-sm" title="Download all projects as CSV">📊 Download Projects CSV</button>
-      <a href="/admin" class="btn btn-admin btn-sm" title="Sign in to Administrator Console">🛡️ Admin Console</a>
+  <header class="scratch-navbar">
+    <div class="scratch-navbar-inner">
+      <div class="nav-left">
+        <a href="/" class="scratch-logo" title="Cao AI Detector – Scratch Community Explorer">
+          <span class="logo-bubble">Cao AI</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#carouselsSection" class="nav-link">Explore</a>
+          <a href="#statsSection" class="nav-link">Statistics</a>
+          <a href="#extensionDownloadSection" class="nav-link">Extension</a>
+          <a href="#adminUsersSection" id="navAdminUsersLink" class="nav-link hidden">🛡️ Users</a>
+        </nav>
+      </div>
+
+      <!-- Scratch Top Search Bar -->
+      <form id="searchProjectForm" class="nav-search-form">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchProjectIdInput" class="nav-search-input" placeholder="Search Project ID (e.g. 1012849182)" pattern="\d+" required>
+      </form>
+
+      <div class="nav-right">
+        <button id="themeToggleBtn" class="nav-action-link" title="Toggle Light/Dark Mode">🌙 Dark Mode</button>
+        <button id="exportVotesBtn" class="nav-action-link" title="Download all votes as CSV">Votes CSV</button>
+        <button id="exportProjectsBtn" class="nav-action-link" title="Download all projects as CSV">Projects CSV</button>
+
+        <!-- Logged out Admin Button -->
+        <button id="openAdminLoginBtn" class="nav-action-btn" title="Sign in as administrator">Sign In</button>
+
+        <!-- Logged in Admin Controls -->
+        <div id="adminNavControls" class="admin-nav-controls hidden">
+          <a href="#adminUsersSection" id="adminBadgeBtn" class="nav-admin-badge" title="Go to User Management">🛡️ <span id="adminUsernameText">admin</span></a>
+          <button id="adminLogoutBtn" class="nav-action-link" title="Sign out">Sign Out</button>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Hero Header -->
-  <div class="hero-banner">
-    <h1 class="hero-title">Scratch AI Detection Community Explorer</h1>
-    <p class="hero-subtitle">
-      Real-time community-driven classifications for Scratch projects. All data is verified by human votes from the Cao AI Detector Chrome extension.
-    </p>
-    <div class="hero-badges">
-      <div class="hero-badge-item"><span>🗳️</span> 100% Human Crowdsourced</div>
-      <div class="hero-badge-item"><span>🔒</span> 1 Vote Per User Guaranteed</div>
-      <div class="hero-badge-item"><span>⚡</span> Live Transactional Aggregation</div>
-      <div class="hero-badge-item"><span>📥</span> Open CSV Data Access</div>
+  <!-- Scratch Homepage Hero Banner -->
+  <section class="scratch-hero">
+    <div class="scratch-hero-inner">
+      <div class="hero-left">
+        <h1 class="hero-heading">
+          Detect AI-generated projects and celebrate human creativity.<br>
+          Share your classifications with the Scratch community.
+        </h1>
+        <span class="sr-only">Scratch AI Detection Community Explorer</span>
+        <div class="hero-cta-group">
+          <a href="/api/extension/download?browser=chrome" class="hero-btn hero-btn-primary" style="text-decoration: none;">
+            <span class="cta-icon">🌐</span> Chrome Extension (.zip)
+          </a>
+          <a href="/api/extension/download?browser=firefox" class="hero-btn hero-btn-secondary" style="text-decoration: none;">
+            <span class="cta-icon">🦊</span> Firefox Extension (.zip)
+          </a>
+          <button id="focusSearchBtn" class="hero-btn hero-btn-secondary">
+            <span class="cta-icon">✨</span> Inspect Project
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Visual Illustration (Scratch Video / Floating Blocks style) -->
+      <div class="hero-right">
+        <div class="hero-illustration">
+          <div class="floating-shape shape-brush">🖌️</div>
+          <div class="floating-shape shape-block-yellow"></div>
+          <div class="floating-shape shape-block-pink"></div>
+          <div class="floating-shape shape-block-purple"></div>
+          <div class="floating-shape shape-drum">🥁</div>
+          <div class="floating-shape shape-Spark">🤖</div>
+
+          <div class="hero-preview-card" id="heroPreviewCard" title="View live community statistics">
+            <div class="preview-screen">
+              <div class="preview-play-circle">
+                <span>🔍</span>
+              </div>
+              <div class="preview-live-stats">
+                <span id="heroQuickVotes">0 votes</span> • <span id="heroQuickProjects">0 projects</span>
+              </div>
+            </div>
+            <div class="preview-caption-pill">Explore Database</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sub-Hero Pill Buttons Row (Like "About Scratch | For Parents | For Educators") -->
+  <div class="subhero-pills-bar">
+    <div class="subhero-pills-inner">
+      <a href="#extensionDownloadSection" class="subhero-pill">📥 Install Extension</a>
+      <a href="#statsSection" class="subhero-pill">Global Statistics</a>
+      <a href="/api/export/csv?type=projects" class="subhero-pill">Open Data (CSV)</a>
     </div>
   </div>
 
-  <!-- Main Explorer Content -->
-  <main class="main-content">
-    <!-- Lookup Tool -->
-    <section class="section" style="padding: 1.25rem 1.5rem;">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-        <div>
-          <h3 style="font-size: 1.05rem; font-weight: 700;">Lookup Scratch Project</h3>
-          <p style="font-size: 0.82rem; color: var(--text-muted);">Enter any Scratch numeric project ID to view its community verdict & vote history</p>
+  <!-- Main Scratch Content Area -->
+  <main class="scratch-main" id="carouselsSection">
+
+    <!-- UNIFIED ADMIN SECTION: USER MANAGEMENT ONLY (Visible only when Admin is logged in, collapsed by default) -->
+    <section id="adminUsersSection" class="scratch-box admin-box hidden">
+      <div class="scratch-box-header admin-box-header">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <h2 class="scratch-box-title" style="color: var(--scratch-purple-dark);">🛡️ Administration – User Management</h2>
+          <span id="adminUsersSummaryBadge" class="badge badge-insufficient">0 users • 0 banned</span>
         </div>
-        <form id="searchProjectForm" class="search-form">
-          <input type="text" id="searchProjectIdInput" class="search-input" placeholder="Enter Project ID (e.g. 1012849182)" pattern="\d+" required>
-          <button type="submit" class="btn btn-search">Inspect Project</button>
-        </form>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <input type="text" id="filterUsersInput" class="admin-user-search" placeholder="Filter or ban UUID...">
+          <button id="banByUuidBtn" class="btn btn-sm inspect-btn" title="Ban entered UUID">Ban UUID</button>
+          <button id="refreshUsersBtn" class="box-header-link">↻ Refresh</button>
+          <button id="toggleAdminUsersBtn" class="btn btn-sm btn-secondary" type="button">▼ Show List</button>
+        </div>
       </div>
-    </section>
-
-    <!-- Metrics Grid -->
-    <section class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-label">Total Voters</div>
-        <div id="metricTotalUsers" class="metric-value">0</div>
-        <div class="metric-sub">Anonymous community participants</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">Indexed Projects</div>
-        <div id="metricTotalProjects" class="metric-value">0</div>
-        <div class="metric-sub">Across scratch.mit.edu</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">Total Community Votes</div>
-        <div id="metricTotalVotes" class="metric-value">0</div>
-        <div id="metricVoteBreakdown" class="metric-sub">0 AI • 0 Human</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">Global Community Ratio</div>
-        <div class="ratio-container">
-          <div class="ratio-bar">
-            <div id="globalRatioAi" class="ratio-ai" style="width: 50%;"></div>
-            <div id="globalRatioHuman" class="ratio-human" style="width: 50%;"></div>
-          </div>
-          <div class="ratio-labels">
-            <span id="globalAiLabel" style="color: var(--scratch-stop-text);">🤖 AI: 0%</span>
-            <span id="globalHumanLabel" style="color: var(--scratch-green-text);">👤 Human: 0%</span>
-          </div>
+      <div id="adminUsersBody" class="scratch-box-body admin-users-body hidden">
+        <div class="table-responsive admin-table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>User UUID</th>
+                <th>Status</th>
+                <th>Total Votes</th>
+                <th>Breakdown (AI / Human)</th>
+                <th>Last Activity</th>
+                <th>User Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody">
+              <tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 1.5rem;">Loading users...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <!-- Most Voted Projects Table -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-title">🔥 Most Voted Scratch Projects</div>
-        <button id="refreshStatsBtn" class="btn btn-secondary btn-sm">↻ Refresh Live Data</button>
+    <!-- Box 1: Featured Projects (Most Voted Projects Carousel) -->
+    <section class="scratch-box">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">Featured Projects (Most Voted)</h2>
+        <button id="refreshStatsBtn" class="box-header-link">↻ Refresh Live Data</button>
       </div>
-      <div class="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>Project ID</th>
-              <th>Total Votes</th>
-              <th>AI Votes</th>
-              <th>Human Votes</th>
-              <th>Community Ratio</th>
-              <th>Community Verdict</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody id="topProjectsTableBody">
-            <tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 2rem;">Loading community projects...</td></tr>
-          </tbody>
-        </table>
+      <div class="carousel-wrapper">
+        <button class="carousel-arrow carousel-prev" data-target="featuredCarousel" aria-label="Previous">&#8249;</button>
+        <div class="carousel-track" id="featuredCarousel">
+          <div class="carousel-empty">Loading community projects...</div>
+        </div>
+        <button class="carousel-arrow carousel-next" data-target="featuredCarousel" aria-label="Next">&#8250;</button>
       </div>
     </section>
 
-    <!-- Recent Votes Activity Stream -->
-    <section class="section">
-      <div class="section-header">
-        <div class="section-title">⚡ Recent Community Votes</div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">Real-time stream of the latest votes cast by users</div>
+    <!-- Box 2: AI-Detected Projects Carousel -->
+    <section class="scratch-box">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">Suspected AI-Generated – Flagged by Community</h2>
+        <a href="/api/export/csv?type=projects" class="box-header-link">Export List</a>
       </div>
-      <div class="table-responsive">
-        <table>
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Project ID</th>
-              <th>Voter UUID</th>
-              <th>Vote Cast</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="recentVotesTableBody">
-            <tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 2rem;">Loading recent votes...</td></tr>
-          </tbody>
-        </table>
+      <div class="carousel-wrapper">
+        <button class="carousel-arrow carousel-prev" data-target="aiCarousel" aria-label="Previous">&#8249;</button>
+        <div class="carousel-track" id="aiCarousel">
+          <div class="carousel-empty">Loading projects...</div>
+        </div>
+        <button class="carousel-arrow carousel-next" data-target="aiCarousel" aria-label="Next">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Box 3: Human-Created Projects Carousel -->
+    <section class="scratch-box">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">Verified Human Creations – Community Favorites</h2>
+        <a href="https://scratch.mit.edu/explore/projects/all" target="_blank" rel="noopener noreferrer" class="box-header-link">Visit Scratch ↗</a>
+      </div>
+      <div class="carousel-wrapper">
+        <button class="carousel-arrow carousel-prev" data-target="humanCarousel" aria-label="Previous">&#8249;</button>
+        <div class="carousel-track" id="humanCarousel">
+          <div class="carousel-empty">Loading projects...</div>
+        </div>
+        <button class="carousel-arrow carousel-next" data-target="humanCarousel" aria-label="Next">&#8250;</button>
+      </div>
+    </section>
+
+    <!-- Box 4: Community Statistics (Metrics & Global Ratio) -->
+    <section class="scratch-box" id="statsSection">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">Global Community Statistics</h2>
+        <span class="box-header-sub">1 vote per user guaranteed • Real-time aggregation</span>
+      </div>
+      <div class="scratch-box-body">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Total Voters</div>
+            <div id="metricTotalUsers" class="metric-value">0</div>
+            <div class="metric-sub">Anonymous participants</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Indexed Projects</div>
+            <div id="metricTotalProjects" class="metric-value">0</div>
+            <div class="metric-sub">Across scratch.mit.edu</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Total Votes</div>
+            <div id="metricTotalVotes" class="metric-value">0</div>
+            <div id="metricVoteBreakdown" class="metric-sub">0 AI • 0 Human</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Global AI / Human Ratio</div>
+            <div class="ratio-container">
+              <div class="ratio-bar">
+                <div id="globalRatioAi" class="ratio-ai" style="width: 50%;"></div>
+                <div id="globalRatioHuman" class="ratio-human" style="width: 50%;"></div>
+              </div>
+              <div class="ratio-labels">
+                <span id="globalAiLabel" style="color: var(--scratch-stop-text);">🤖 AI: 0%</span>
+                <span id="globalHumanLabel" style="color: var(--scratch-green-text);">👤 Human: 0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Table Toggle / View -->
+        <details class="detailed-table-details">
+          <summary class="detailed-table-summary">📊 View Detailed Table of Most Voted Projects</summary>
+          <div class="table-responsive" style="margin-top: 1rem;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Project ID</th>
+                  <th>Total Votes</th>
+                  <th>AI Votes</th>
+                  <th>Human Votes</th>
+                  <th>Community Ratio</th>
+                  <th>Verdict</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="topProjectsTableBody">
+                <tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 1.5rem;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Box 5: Live Activity (Recent Votes Stream) -->
+    <section class="scratch-box" id="recentVotesSection">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">Recent Activity – Latest Community Votes</h2>
+        <span class="box-header-sub">Live stream of submitted classifications</span>
+      </div>
+      <div class="scratch-box-body">
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Scratch Project</th>
+                <th>Voter (Masked UUID)</th>
+                <th>Vote Cast</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recentVotesTableBody">
+              <tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 1.5rem;">Loading recent votes...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Box 6: Download Browser Extension (Chrome & Firefox) -->
+    <section class="scratch-box" id="extensionDownloadSection">
+      <div class="scratch-box-header">
+        <h2 class="scratch-box-title">🧩 Download Cao AI Detector Extension (Chrome & Firefox)</h2>
+        <span class="box-header-sub">Vote and view verdicts directly on scratch.mit.edu</span>
+      </div>
+      <div class="scratch-box-body">
+        <div class="ext-download-grid">
+          <!-- Chrome Card -->
+          <div class="ext-download-card">
+            <div class="ext-card-top">
+              <span class="ext-browser-icon">🌐</span>
+              <div>
+                <h3 class="ext-browser-title">Google Chrome / Brave / Edge</h3>
+                <p class="ext-browser-sub">Ready-to-load Manifest V3 package</p>
+              </div>
+            </div>
+            <ol class="ext-steps">
+              <li>Download and unzip the <code>.zip</code> archive.</li>
+              <li>Open <code>chrome://extensions</code> and enable <strong>Developer mode</strong>.</li>
+              <li>Click <strong>Load unpacked</strong> and select the extracted folder.</li>
+            </ol>
+            <a href="/api/extension/download?browser=chrome" class="btn btn-primary ext-dl-btn">
+              📥 Download for Chrome (.zip)
+            </a>
+          </div>
+
+          <!-- Firefox Card -->
+          <div class="ext-download-card">
+            <div class="ext-card-top">
+              <span class="ext-browser-icon">🦊</span>
+              <div>
+                <h3 class="ext-browser-title">Mozilla Firefox</h3>
+                <p class="ext-browser-sub">Gecko-compatible WebExtension archive</p>
+              </div>
+            </div>
+            <ol class="ext-steps">
+              <li>Download the Firefox <code>.zip</code> archive.</li>
+              <li>Open <code>about:debugging#/runtime/this-firefox</code> in Firefox.</li>
+              <li>Click <strong>Load Temporary Add-on...</strong> and select the <code>.zip</code> file.</li>
+            </ol>
+            <a href="/api/extension/download?browser=firefox" class="btn btn-primary ext-dl-btn" style="background: var(--scratch-orange);">
+              📥 Download for Firefox (.zip)
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
+
+  <!-- Authentic Scratch Multi-Column Footer -->
+  <footer class="scratch-footer">
+    <div class="scratch-footer-inner">
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#carouselsSection">About Cao AI Detector</a></li>
+          <li><a href="#statsSection">Voting Methodology</a></li>
+          <li><a href="/api/health" target="_blank">API Server Health</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#carouselsSection">Featured Projects</a></li>
+          <li><a href="#recentVotesSection">Live Votes Stream</a></li>
+          <li><a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">Official Scratch Website ↗</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources & Data</h4>
+        <ul>
+          <li><a href="/api/extension/download?browser=chrome">Chrome Extension (.zip)</a></li>
+          <li><a href="/api/extension/download?browser=firefox">Firefox Extension (.zip)</a></li>
+          <li><a href="/api/export/csv?type=votes">Download Votes (CSV)</a></li>
+          <li><a href="/api/export/csv?type=projects">Download Projects (CSV)</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Administration</h4>
+        <ul>
+          <li><a href="#adminUsersSection" id="footerAdminLink">User Management</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="scratch-footer-bottom">
+      <p>Cao AI Detector is an independent community project and is not affiliated with the Scratch Team or the MIT Media Lab.</p>
+    </div>
+  </footer>
 
   <!-- Project Inspection Modal (Read-Only) -->
   <div id="projectModal" class="modal-overlay hidden">
@@ -148,8 +379,7 @@
         <button id="closeModalBtn" class="close-btn">&times;</button>
       </div>
       <div class="modal-body">
-        <!-- Project Stats Box -->
-        <div id="modalStatsBox" style="background: #f8faff; padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+        <div id="modalStatsBox" class="modal-stats-box">
           <!-- Dynamically filled -->
         </div>
 
@@ -161,7 +391,7 @@
               <tr>
                 <th>Voter (Masked UUID)</th>
                 <th>Vote</th>
-                <th>Time Submitted</th>
+                <th>Submitted At</th>
               </tr>
             </thead>
             <tbody id="modalVotesTableBody">
@@ -175,6 +405,34 @@
       </div>
     </div>
   </div>
+
+  <!-- Admin Login Modal (Scratch Sign-In Style) -->
+  <div id="adminLoginModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>🛡️ Administrator Sign In</h2>
+        <button id="closeAdminLoginBtn" class="close-btn">&times;</button>
+      </div>
+      <form id="adminLoginForm" class="modal-body">
+        <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Sign in to unlock the User Management panel directly on this page.
+        </p>
+        <div class="form-group">
+          <label for="adminUsernameInput">Username</label>
+          <input type="text" id="adminUsernameInput" class="form-input" placeholder="admin" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="adminPasswordInput">Password</label>
+          <input type="password" id="adminPasswordInput" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <div id="adminLoginError" class="login-error hidden"></div>
+        <button type="submit" id="adminLoginSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
 
   <script src="/explorer.js"></script>
 </body>
