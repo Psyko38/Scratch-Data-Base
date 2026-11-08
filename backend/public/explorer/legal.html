@@ -126,7 +126,44 @@
     .back-btn:hover {
       text-decoration: underline;
     }
+
+    /* Dark Mode Theme Support */
+    [data-theme="dark"] .legal-card {
+      background: var(--scratch-bg-card, #202330);
+      border-color: var(--border-color, #2d3142);
+      color: var(--text-dark, #f0f2f8);
+    }
+    [data-theme="dark"] .legal-title,
+    [data-theme="dark"] .legal-section h3,
+    [data-theme="dark"] .legal-section p,
+    [data-theme="dark"] .legal-section li,
+    [data-theme="dark"] .legal-alert {
+      color: var(--text-dark, #f0f2f8);
+    }
+    [data-theme="dark"] .legal-nav {
+      background: var(--scratch-bg-box-header, #252836);
+    }
+    [data-theme="dark"] .legal-nav a {
+      background: #1b1d28;
+      color: #c7b9f5;
+      border-color: #383c52;
+    }
+    [data-theme="dark"] .legal-nav a:hover {
+      background: var(--scratch-purple, #855cd6);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .legal-subtitle {
+      color: #9aa1b5;
+    }
   </style>
+  <script>
+    (function() {
+      var saved = localStorage.getItem('cao_web_theme');
+      if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Authentic Scratch Top Navbar -->
@@ -143,6 +180,9 @@
           <a href="#privacy" class="nav-link">Privacy Policy (GDPR)</a>
           <a href="#terms" class="nav-link">Terms of Service</a>
         </nav>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggleBtn" class="nav-icon-btn" title="Toggle Light/Dark Mode">🌙</button>
       </div>
     </div>
   </header>
@@ -377,6 +417,29 @@
           scrollToId(targetId);
         }
       });
+
+      // Handle theme toggle
+      var themeToggleBtn = document.getElementById('themeToggleBtn');
+      function updateThemeBtn() {
+        if (!themeToggleBtn) return;
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        themeToggleBtn.textContent = isDark ? '☀️' : '🌙';
+        themeToggleBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+      }
+      updateThemeBtn();
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+          var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          var next = isDark ? 'light' : 'dark';
+          localStorage.setItem('cao_web_theme', next);
+          if (next === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
+          updateThemeBtn();
+        });
+      }
 
       // Handle initial load if hash is present
       window.addEventListener('DOMContentLoaded', function() {

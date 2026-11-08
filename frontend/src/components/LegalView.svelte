@@ -1,139 +1,376 @@
 <script>
+  import { onMount } from 'svelte';
+
   export let onBackToExplorer = () => {};
   export let initialTab = 'about';
 
-  let activeTab = initialTab;
+  let activeTab = 'about';
 
-  function setTab(tab) {
-    activeTab = tab;
+  $: if (initialTab) {
+    activeTab = initialTab;
+    scrollToTab(initialTab);
   }
+
+  function scrollToTab(tabId) {
+    if (typeof document === 'undefined') return;
+    setTimeout(() => {
+      const el = document.getElementById(tabId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
+  }
+
+  function handleTabClick(tabId) {
+    activeTab = tabId;
+    scrollToTab(tabId);
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.pathname + '#' + tabId);
+    }
+  }
+
+  onMount(() => {
+    if (initialTab) {
+      activeTab = initialTab;
+      scrollToTab(initialTab);
+    }
+  });
 </script>
 
 <div class="legal-container">
+  <button class="back-btn" on:click={onBackToExplorer}>
+    ← Back to Scratch AI Community Explorer
+  </button>
+
   <div class="legal-card">
     <div class="legal-header">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
-          <h1 class="legal-title">Scratch AI – Legal, Privacy & Compliance</h1>
-          <p class="legal-subtitle">Open, collaborative community AI classification for Scratch projects</p>
+          <h1 class="legal-title">Legal Notice, Privacy Policy (GDPR) & About</h1>
+          <div class="legal-subtitle">
+            Last updated: November 8, 2026 • Compliant with EU GDPR (Regulation 2016/679), French LCEN law, and Chrome Web Store Policies.
+          </div>
         </div>
         <button class="btn btn-secondary" on:click={onBackToExplorer}>
-          ← Back to Community Explorer
+          ← Back to Explorer
         </button>
       </div>
 
-      <nav class="legal-nav" style="margin-top: 1.5rem;">
-        <button class="subhero-pill" class:active={activeTab === 'about'} on:click={() => setTab('about')}>
-          ℹ️ About & Methodology
+      <!-- Quick Jump Navigation Tabs -->
+      <nav class="legal-nav" id="legalNav">
+        <button
+          type="button"
+          class:active={activeTab === 'about'}
+          on:click={() => handleTabClick('about')}
+        >
+          ℹ️ 1. About & Methodology
         </button>
-        <button class="subhero-pill" class:active={activeTab === 'legal-notice'} on:click={() => setTab('legal-notice')}>
-          ⚖️ Legal Notice (LCEN)
+        <button
+          type="button"
+          class:active={activeTab === 'legal-notice'}
+          on:click={() => handleTabClick('legal-notice')}
+        >
+          ⚖️ 2. Legal Notice
         </button>
-        <button class="subhero-pill" class:active={activeTab === 'privacy'} on:click={() => setTab('privacy')}>
-          🛡️ Privacy Policy (GDPR)
+        <button
+          type="button"
+          class:active={activeTab === 'privacy'}
+          on:click={() => handleTabClick('privacy')}
+        >
+          🔒 3. Privacy Policy (GDPR)
         </button>
-        <button class="subhero-pill" class:active={activeTab === 'terms'} on:click={() => setTab('terms')}>
-          📜 Terms of Service
+        <button
+          type="button"
+          class:active={activeTab === 'terms'}
+          on:click={() => handleTabClick('terms')}
+        >
+          📜 4. Terms of Service & Disclaimer
         </button>
       </nav>
     </div>
 
-    <!-- Section 1: About & Methodology -->
-    {#if activeTab === 'about'}
-      <section id="about" class="legal-section">
-        <h2>ℹ️ About Scratch AI & Detection Methodology</h2>
-        <p>
-          <strong>Scratch AI</strong> is an independent, community-driven initiative dedicated to detecting AI-generated Scratch projects and celebrating authentic human creativity across the <a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">Scratch platform</a>.
-        </p>
+    <!-- Section 1 : About & Methodology -->
+    <section id="about" class="legal-section">
+      <h2>ℹ️ 1. About Scratch AI & Detection Methodology</h2>
+      <p>
+        <strong>Scratch AI</strong> is an independent, community-driven open-source initiative designed to provide crowdsourced AI detection classifications for Scratch projects (<a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">scratch.mit.edu</a>).
+      </p>
+      <p>The system combines:</p>
+      <ul>
+        <li><strong>A lightweight browser extension (Chrome & Firefox)</strong> that allows users to cast classification votes directly on Scratch project pages and view real-time community verdicts.</li>
+        <li><strong>A centralized, transactional backend service</strong> ensuring one vote per user per project and live statistical aggregation.</li>
+        <li><strong>A public Community Web Explorer</strong> offering transparent read-only inspection and Open Data CSV downloads.</li>
+      </ul>
 
-        <h3>How Community Classification Works</h3>
-        <p>
-          Scratch AI operates entirely on transparent, democratic community consensus:
-        </p>
-        <ul>
-          <li><strong>One Vote Per User</strong>: Each participant may register at most one vote per Scratch project. Voting again simply updates the existing vote without inflating counts.</li>
-          <li><strong>Minimum Threshold (5 Votes)</strong>: To prevent spam and volatile swings, projects with fewer than 5 votes display an <em>Insufficient data</em> verdict.</li>
-          <li><strong>Majority Formula</strong>: Once at least 5 votes are recorded:
-            <ul>
-              <li><strong>AI-generated</strong>: More than 50% of submitted votes classify the project as AI.</li>
-              <li><strong>Human-created</strong>: Fewer than 50% of submitted votes classify the project as AI.</li>
-              <li><strong>Undetermined</strong>: Exactly 50% AI and 50% Human votes.</li>
-            </ul>
-          </li>
-        </ul>
+      <h3>Verdict Determination Formula</h3>
+      <p>Project verdicts are calculated strictly and deterministically based on real community votes:</p>
+      <ul>
+        <li><strong>Insufficient data (⏳)</strong>: Fewer than 5 community votes have been cast.</li>
+        <li><strong>AI-generated (🤖)</strong>: At least 5 votes recorded, and AI votes represent more than 50% of the total.</li>
+        <li><strong>Human-created (👤)</strong>: At least 5 votes recorded, and Human votes represent more than 50% of the total.</li>
+        <li><strong>Undetermined (⚖️)</strong>: At least 5 votes recorded, and AI and Human votes are exactly equal (50% / 50%).</li>
+      </ul>
+    </section>
 
-        <blockquote>
-          <strong>Important Disclaimer:</strong> Community classifications represent crowdsourced user opinions and are NOT technically verified AI analyses or cryptographic proofs.
-        </blockquote>
-      </section>
-    {/if}
+    <!-- Section 2 : Legal Notice (LCEN) -->
+    <section id="legal-notice" class="legal-section">
+      <h2>⚖️ 2. Legal Notice (French LCEN Law Article 6, III-1)</h2>
 
-    <!-- Section 2: Legal Notice (LCEN) -->
-    {#if activeTab === 'legal-notice'}
-      <section id="legal-notice" class="legal-section">
-        <h2>⚖️ Legal Notice (Mentions Légales – French LCEN)</h2>
-        <p>
-          In accordance with Article 6 of French Law No. 2004-575 of June 21, 2004 regarding Confidence in the Digital Economy (LCEN), the identity of participants involved in the publication and hosting of Scratch AI is provided below:
-        </p>
-        <table class="legal-info-table">
-          <tbody>
-            <tr>
-              <td><strong>Editor & Project Maintainer:</strong></td>
-              <td>Scratch AI Community Maintainers (<a href="https://github.com/Psyko38/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">GitHub: Psyko38/Scratch-Data-Base</a>)</td>
-            </tr>
-            <tr>
-              <td><strong>Hosting Provider:</strong></td>
-              <td>
-                Alwaysdata SARL<br>
-                91 rue du Faubourg Saint-Honoré, 75008 Paris, France<br>
-                Website: <a href="https://www.alwaysdata.com" target="_blank" rel="noopener noreferrer">alwaysdata.com</a>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Intellectual Property & Non-Affiliation:</strong></td>
-              <td>
-                Scratch is a trademark of the Scratch Foundation and MIT Media Lab. Scratch AI is an independent community project and is NOT affiliated with, sponsored by, or endorsed by the Scratch Foundation or the Massachusetts Institute of Technology.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    {/if}
+      <h3>2.1. Publisher & Project Maintainer</h3>
+      <p>The <strong>Scratch AI</strong> service (website, API, and browser extension) is developed, edited, and maintained by:</p>
+      <ul>
+        <li><strong>Author & Publisher</strong>: Mattéo Banzet (Psyko38)</li>
+        <li><strong>Project Nature</strong>: Volunteer, open-source community software project</li>
+        <li><strong>Official Source Code Repository</strong>: <a href="https://github.com/Psyko38/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">https://github.com/Psyko38/Scratch-Data-Base</a></li>
+      </ul>
 
-    <!-- Section 3: Privacy Policy (GDPR) -->
-    {#if activeTab === 'privacy'}
-      <section id="privacy" class="legal-section">
-        <h2>🛡️ Privacy Policy & GDPR Compliance</h2>
-        <p>
-          Scratch AI adheres strictly to the European General Data Protection Regulation (GDPR - EU 2016/679).
-        </p>
-        <h3>Data Minimization by Design</h3>
-        <ul>
-          <li><strong>No User Accounts</strong>: Scratch AI requires no personal information, email addresses, names, or Scratch passwords.</li>
-          <li><strong>Anonymous Voter UUID</strong>: A randomized UUID (e.g. <code>a1b2c3d4-e5f6...</code>) is generated locally in browser extension storage solely for deduplicating votes.</li>
-          <li><strong>Public Voter Masking</strong>: In all public listings, voter UUIDs are securely masked (e.g. <code>a1b2c3...f6e5</code>) to preserve anonymity.</li>
-          <li><strong>No Commercial Tracking</strong>: Scratch AI uses zero tracking scripts, zero advertising networks, and zero invasive third-party telemetry.</li>
-        </ul>
-        <h3>Rights under GDPR</h3>
-        <p>
-          Users may request deletion of their voting record or unlinking of their anonymous UUID at any time by contacting the maintainers through our public GitHub repository.
-        </p>
-      </section>
-    {/if}
+      <h3>2.2. Web Hosting Provider</h3>
+      <p>Server infrastructure and SQLite data storage are hosted by:</p>
+      <ul>
+        <li><strong>Hosting Provider</strong>: Alwaysdata SARL</li>
+        <li><strong>Registered Office</strong>: 91 rue du Faubourg Saint-Honoré, 75008 Paris, France</li>
+        <li><strong>Commercial Registry</strong>: RCS Paris 492 893 490</li>
+        <li><strong>Phone</strong>: +33 1 84 16 23 40</li>
+        <li><strong>Website</strong>: <a href="https://www.alwaysdata.com" target="_blank" rel="noopener noreferrer">https://www.alwaysdata.com</a></li>
+      </ul>
 
-    <!-- Section 4: Terms of Service -->
-    {#if activeTab === 'terms'}
-      <section id="terms" class="legal-section">
-        <h2>📜 Terms of Service</h2>
-        <p>
-          By using Scratch AI or the Scratch AI browser extension, you agree to these Terms of Service:
-        </p>
-        <ol>
-          <li><strong>Fair Community Participation</strong>: Users must vote in good faith and refrain from coordinated botting, vote manipulation, or harassment of Scratch creators.</li>
-          <li><strong>Abuse Prevention</strong>: The administrative team reserves the right to ban malicious UUIDs and purge fraudulent votes to protect data integrity.</li>
-          <li><strong>Open Data</strong>: Voting aggregates and project metrics are released under the Open Database License for public community benefit.</li>
-        </ol>
-      </section>
-    {/if}
+      <h3>2.3. Intellectual Property & Non-Affiliation Disclaimer</h3>
+      <div class="legal-alert">
+        <strong>Mandatory Non-Affiliation Notice:</strong><br>
+        <em>Scratch</em> is a registered trademark of the <strong>Scratch Foundation</strong> and the <strong>MIT Media Lab</strong> (Massachusetts Institute of Technology).<br>
+        <strong>Scratch AI</strong> is an independent third-party open-source project. It is not affiliated with, endorsed by, sponsored by, or associated in any way with the Scratch Foundation, the MIT Media Lab, or the Scratch Team.
+      </div>
+      <p>
+        All Scratch AI software code and documentation are released freely under the terms of the <strong>MIT License</strong>.
+      </p>
+    </section>
+
+    <!-- Section 3 : Privacy Policy (GDPR) -->
+    <section id="privacy" class="legal-section">
+      <h2>🔒 3. Privacy Policy & GDPR Compliance</h2>
+      <p>
+        Scratch AI operates strictly on the principle of <em>Privacy by Design</em> and data minimization in compliance with the EU General Data Protection Regulation (GDPR n° 2016/679) and Google Chrome Web Store Developer Privacy Requirements.
+      </p>
+
+      <h3>3.1. Collected Data</h3>
+      <ul>
+        <li>
+          <strong>Random Anonymous Voter ID (UUID v4)</strong>: On first installation, a random UUID string (e.g., <code>ba99d8b9-a998-45fd-8f43-62f09baa79b8</code>) is generated locally inside your browser storage (<code>chrome.storage.local</code>).
+          This identifier contains <strong>zero personal identity data</strong> (no name, no email address, no password, no phone number, and no tracking cookies).
+        </li>
+        <li>
+          <strong>Classification Choice & Project ID</strong>: When you submit a vote, only the numeric Scratch project ID (e.g., <code>1012849182</code>), your choice (<code>ai</code> or <code>human</code>), and the submission timestamp are stored.
+        </li>
+        <li>
+          <strong>Technical Connection Logs</strong>: Incoming HTTP requests include technical IP addresses processed solely in memory for sliding-window anti-spam rate limiting. IP addresses are not linked to your identity and are never sold or used for profiling.
+        </li>
+      </ul>
+
+      <h3>3.2. Data That Is NEVER Collected</h3>
+      <ul>
+        <li>❌ No personal names, real-world identities, or email addresses.</li>
+        <li>❌ No Scratch account login credentials or session tokens.</li>
+        <li>❌ No general browsing history outside public Scratch project pages.</li>
+        <li>❌ No advertising cookies, third-party analytics (Google Analytics, Meta Pixel), or behavioral trackers.</li>
+      </ul>
+
+      <h3>3.3. Purpose and Legal Basis (GDPR Art. 6.1.f)</h3>
+      <p>Processing is founded on the <strong>legitimate interest</strong> of maintaining a fair, abuse-resistant crowdsourced service:</p>
+      <ul>
+        <li>Preventing ballot-box stuffing and fraudulent duplicate votes via the database constraint <code>UNIQUE(user_id, project_id)</code>.</li>
+        <li>Allowing voters to modify their previous choice on a project without inflating vote counts.</li>
+      </ul>
+
+      <h3>3.4. Data Retention & User Rights (GDPR Articles 15 to 22)</h3>
+      <ul>
+        <li><strong>Right of Erasure & Reset</strong>: You can reset or delete your local UUID at any time by uninstalling the extension or clearing local browser extension storage.</li>
+        <li><strong>Right of Access & Inquiries</strong>: Users may request information or deletion of votes associated with their specific UUID by opening an issue on GitHub.</li>
+      </ul>
+    </section>
+
+    <!-- Section 4 : Terms of Service & Disclaimer -->
+    <section id="terms" class="legal-section">
+      <h2>📜 4. Terms of Service & Community Disclaimer</h2>
+
+      <h3>4.1. Nature of Verdicts</h3>
+      <div class="legal-alert" style="background: rgba(77, 151, 255, 0.12); border-left-color: var(--scratch-blue, #4d97ff);">
+        <strong>Disclaimer of Opinion:</strong><br>
+        All verdicts and statistics displayed by Scratch AI represent <strong>strictly participatory community opinions</strong>.<br>
+        They do not constitute technically verified forensic analysis, guaranteed factual claims, or official judgments regarding any Scratch project creator.
+      </div>
+
+      <h3>4.2. Acceptable Use Policy</h3>
+      <p>Users must not:</p>
+      <ul>
+        <li>Deploy automated scripts, bots, or scraping tools to artificially manipulate project statistics.</li>
+        <li>Attempt to bypass rate limiting or moderation controls.</li>
+      </ul>
+      <p>
+        The service administrators reserve the right to ban abusive UUIDs and purge fraudulent voting batches.
+      </p>
+
+      <h3>4.3. Inquiries & Contact</h3>
+      <p>
+        For legal inquiries, abuse reports, or data deletion requests, please open a ticket on the official GitHub repository:<br>
+        👉 <a href="https://github.com/Psyko38/Scratch-Data-Base/issues" target="_blank" rel="noopener noreferrer">https://github.com/Psyko38/Scratch-Data-Base/issues</a>
+      </p>
+    </section>
   </div>
 </div>
+
+<style>
+  .legal-container {
+    max-width: 960px;
+    margin: 30px auto 60px;
+    padding: 0 16px;
+  }
+  .legal-card {
+    background: var(--scratch-bg-card, #ffffff);
+    border: 1px solid var(--border-color, #d9d9d9);
+    border-radius: 12px;
+    padding: 32px 36px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    color: var(--text-dark, #323742);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .legal-header {
+    border-bottom: 2px solid var(--scratch-purple, #855cd6);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .legal-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-dark, #323742);
+    margin-bottom: 8px;
+  }
+  .legal-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted, #73798c);
+    line-height: 1.5;
+  }
+  .legal-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 24px;
+    padding: 12px;
+    background: var(--scratch-bg-box-header, #f2f2f2);
+    border-radius: 8px;
+  }
+  .legal-nav button {
+    color: var(--scratch-purple, #855cd6);
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .legal-nav button:hover {
+    background: var(--scratch-purple, #855cd6);
+    color: #ffffff;
+  }
+  .legal-nav button.active {
+    background: var(--scratch-purple, #855cd6) !important;
+    color: #ffffff !important;
+    border-color: var(--scratch-purple, #855cd6) !important;
+    box-shadow: 0 2px 6px rgba(133, 92, 214, 0.35);
+  }
+  .legal-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+    scroll-margin-top: 80px;
+  }
+  .legal-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .legal-section h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--scratch-purple, #855cd6);
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legal-section h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-dark, #323742);
+    margin: 20px 0 8px;
+  }
+  .legal-section p, .legal-section li {
+    font-size: 0.92rem;
+    color: var(--text-dark, #323742);
+    line-height: 1.65;
+  }
+  .legal-section ul {
+    padding-left: 24px;
+    margin: 10px 0;
+  }
+  .legal-alert {
+    background: rgba(255, 171, 25, 0.12);
+    border-left: 4px solid var(--scratch-orange, #ffab19);
+    padding: 12px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+    font-size: 0.88rem;
+    color: var(--text-dark, #323742);
+    line-height: 1.6;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--scratch-purple, #855cd6);
+    background: none;
+    border: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .back-btn:hover {
+    text-decoration: underline;
+  }
+  .legal-section a {
+    color: var(--scratch-purple, #855cd6);
+    text-decoration: underline;
+  }
+
+  :global([data-theme="dark"]) .legal-card {
+    background: var(--scratch-bg-card, #202330);
+    border-color: var(--border-color, #2d3142);
+    color: var(--text-dark, #f0f2f8);
+  }
+  :global([data-theme="dark"]) .legal-title,
+  :global([data-theme="dark"]) .legal-section h3,
+  :global([data-theme="dark"]) .legal-section p,
+  :global([data-theme="dark"]) .legal-section li,
+  :global([data-theme="dark"]) .legal-alert {
+    color: var(--text-dark, #f0f2f8);
+  }
+  :global([data-theme="dark"]) .legal-nav {
+    background: var(--scratch-bg-box-header, #252836);
+  }
+  :global([data-theme="dark"]) .legal-nav button {
+    background: #1b1d28;
+    color: #c7b9f5;
+    border-color: #383c52;
+  }
+  :global([data-theme="dark"]) .legal-nav button:hover {
+    background: var(--scratch-purple, #855cd6);
+    color: #ffffff;
+  }
+</style>
