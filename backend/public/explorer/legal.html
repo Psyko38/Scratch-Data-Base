@@ -48,20 +48,31 @@
       text-decoration: none;
       font-weight: 700;
       font-size: 0.88rem;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 6px;
       background: #ffffff;
-      border: 1px solid rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.1);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
     }
     .legal-nav a:hover {
       background: var(--scratch-purple, #855cd6);
       color: #ffffff;
     }
+    .legal-nav a.active {
+      background: var(--scratch-purple, #855cd6) !important;
+      color: #ffffff !important;
+      border-color: var(--scratch-purple, #855cd6) !important;
+      box-shadow: 0 2px 6px rgba(133, 92, 214, 0.35);
+    }
     .legal-section {
       margin-bottom: 40px;
       padding-bottom: 30px;
       border-bottom: 1px solid var(--border-color, #e0e0e0);
+      scroll-margin-top: 70px;
     }
     .legal-section:last-child {
       border-bottom: none;
@@ -112,6 +123,9 @@
       font-size: 0.9rem;
       margin-bottom: 16px;
     }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -144,9 +158,9 @@
         </div>
       </div>
 
-      <!-- Quick Jump Navigation -->
-      <nav class="legal-nav">
-        <a href="#about">ℹ️ 1. About & Methodology</a>
+      <!-- Quick Jump Navigation Tabs -->
+      <nav class="legal-nav" id="legalNav">
+        <a href="#about" class="active">ℹ️ 1. About & Methodology</a>
         <a href="#legal-notice">⚖️ 2. Legal Notice</a>
         <a href="#privacy">🔒 3. Privacy Policy (GDPR)</a>
         <a href="#terms">📜 4. Terms of Service & Disclaimer</a>
@@ -188,9 +202,9 @@
           The <strong>Scratch AI</strong> service (website, API, and browser extension) is developed, edited, and maintained by:
         </p>
         <ul>
-          <li><strong>Author & Publisher</strong>: Mattéo Banzet</li>
+          <li><strong>Author & Publisher</strong>: Mattéo Banzet (Psyko38)</li>
           <li><strong>Project Nature</strong>: Volunteer, open-source community software project</li>
-          <li><strong>Public Source Code Repository</strong>: <a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">https://github.com/matteocao/Scratch-Data-Base</a></li>
+          <li><strong>Official Source Code Repository</strong>: <a href="https://github.com/Psyko38/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">https://github.com/Psyko38/Scratch-Data-Base</a></li>
         </ul>
 
         <h3>2.2. Web Hosting Provider</h3>
@@ -287,7 +301,7 @@
         <h3>4.3. Inquiries & Contact</h3>
         <p>
           For legal inquiries, abuse reports, or data deletion requests, please open a ticket on the official GitHub repository:<br>
-          👉 <a href="https://github.com/matteocao/Scratch-Data-Base/issues" target="_blank" rel="noopener noreferrer">https://github.com/matteocao/Scratch-Data-Base/issues</a>
+          👉 <a href="https://github.com/Psyko38/Scratch-Data-Base/issues" target="_blank" rel="noopener noreferrer">https://github.com/Psyko38/Scratch-Data-Base/issues</a>
         </p>
       </section>
     </div>
@@ -316,7 +330,7 @@
         <h4>Community</h4>
         <ul>
           <li><a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">Official Scratch Website ↗</a></li>
-          <li><a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">Source Code (GitHub) ↗</a></li>
+          <li><a href="https://github.com/Psyko38/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">Source Code (GitHub) ↗</a></li>
         </ul>
       </div>
     </div>
@@ -324,5 +338,58 @@
       <p>Scratch AI is an independent open-source community project, not affiliated with the Scratch Foundation or the MIT Media Lab.</p>
     </div>
   </footer>
+
+  <!-- Anchor Scroll and Base-HREF Navigation Fix -->
+  <script>
+    (function() {
+      function setActiveTab(targetId) {
+        document.querySelectorAll('#legalNav a').forEach(function(link) {
+          if (link.getAttribute('href') === '#' + targetId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+
+      function scrollToId(targetId) {
+        var targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+          setActiveTab(targetId);
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname + '#' + targetId);
+          }
+        }
+      }
+
+      // Intercept any fragment link click to avoid resolving against <base href> back to root
+      document.addEventListener('click', function(e) {
+        var link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        var href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        var targetId = href.slice(1);
+        if (document.getElementById(targetId)) {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollToId(targetId);
+        }
+      });
+
+      // Handle initial load if hash is present
+      window.addEventListener('DOMContentLoaded', function() {
+        var initialHash = (window.location.hash || '').replace('#', '');
+        if (initialHash && document.getElementById(initialHash)) {
+          setTimeout(function() {
+            scrollToId(initialHash);
+          }, 60);
+        } else {
+          setActiveTab('about');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

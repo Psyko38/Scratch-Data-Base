@@ -123,7 +123,7 @@ Scratch-Data-Base/
 
 1. **Clone the repository on your server**:
    ```bash
-   git clone https://github.com/matteocao/Scratch-Data-Base.git
+   git clone https://github.com/Psyko38/Scratch-Data-Base.git
    cd Scratch-Data-Base
    ```
 
