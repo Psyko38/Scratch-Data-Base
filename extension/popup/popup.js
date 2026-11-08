@@ -14,6 +14,7 @@
   const updateBanner = document.getElementById('updateBanner');
   const downloadUpdateBtn = document.getElementById('downloadUpdateBtn');
   const dismissUpdateBtn = document.getElementById('dismissUpdateBtn');
+  const popupLegalLink = document.getElementById('popupLegalLink');
 
   const openExplorerBrandLink = document.getElementById('openExplorerBrandLink');
   const openExplorerBtn = document.getElementById('openExplorerBtn');
@@ -148,6 +149,7 @@
     backendUrl = normalizeUrl(stored.backendUrl);
     if (openExplorerBrandLink) openExplorerBrandLink.href = backendUrl;
     if (openExplorerBtn) openExplorerBtn.href = backendUrl;
+    if (popupLegalLink) popupLegalLink.href = `${backendUrl}/legal`;
 
     // Check for extension updates from the backend server
     checkForUpdates(backendUrl);

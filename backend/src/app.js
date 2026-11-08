@@ -53,15 +53,17 @@ app.use((req, res, next) => {
     return next();
   }
 
+  const KNOWN_ROOTS = '(?:api|admin|explore|legal|privacy|terms|about)';
+
   // 2. Direct bare access without trailing slash (e.g. GET /scratch-ai -> 301 to /scratch-ai/)
-  const bareMatch = req.url.match(/^(\/(?!api\b|admin\b|explore\b)[a-zA-Z0-9_\-]+)$/);
+  const bareMatch = req.url.match(new RegExp(`^(\\/(?!${KNOWN_ROOTS}\\b)[a-zA-Z0-9_\\-]+)$`));
   if (bareMatch) {
     return res.redirect(301, req.url + '/');
   }
 
   // 3. Dynamic subpath detection for unknown prefixes:
   // Matches e.g. /<subpath>/ OR /<subpath>/api/... OR /<subpath>/explorer.css
-  const subpathMatch = req.url.match(/^(\/(?!api\b|admin\b|explore\b)[a-zA-Z0-9_\-]+)(\/.*)$/);
+  const subpathMatch = req.url.match(new RegExp(`^(\\/(?!${KNOWN_ROOTS}\\b)[a-zA-Z0-9_\\-]+)(\\/.*)$`));
   if (subpathMatch) {
     req.basePath = subpathMatch[1];
     req.url = subpathMatch[2];
@@ -86,13 +88,20 @@ app.use('/api', require('./routes/users'));
 app.use('/api', require('./routes/publicStats'));
 app.use('/api/admin', require('./routes/admin'));
 
-// Load Community Explorer HTML Template
+// Load Community Explorer and Legal HTML Templates
 const indexHtmlPath = path.resolve(__dirname, '../public/explorer/index.html');
+const legalHtmlPath = path.resolve(__dirname, '../public/explorer/legal.html');
 let indexHtmlTemplate = '';
+let legalHtmlTemplate = '';
 try {
   indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
 } catch (e) {
   console.error('Could not preload explorer index.html:', e);
+}
+try {
+  legalHtmlTemplate = fs.readFileSync(legalHtmlPath, 'utf8');
+} catch (e) {
+  console.error('Could not preload legal.html:', e);
 }
 
 // Community Explorer Page (Also serves unified Admin User Management view)
@@ -103,6 +112,21 @@ app.get(['/', '/explore', '/explore/', '/admin', '/admin/'], (req, res) => {
 
   // Inject <base href="..."> and window.__BASE_PATH__ for seamless subroute asset resolution
   const html = indexHtmlTemplate.replace(
+    '<head>',
+    `<head>\n  <base href="${baseHref}">\n  <script>window.__BASE_PATH__ = "${currentBase}";</script>`
+  );
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
+});
+
+// Legal, Privacy (GDPR), Terms, and About Pages (Mandatory for LCEN & Chrome Web Store)
+app.get(['/legal', '/legal/', '/privacy', '/privacy/', '/terms', '/terms/', '/about', '/about/'], (req, res) => {
+  const forwardedPrefix = (req.headers['x-forwarded-prefix'] || '').trim().replace(/\/+$/, '');
+  const currentBase = (req.basePath || forwardedPrefix || configuredBasePath || '').replace(/\/+$/, '');
+  const baseHref = currentBase ? currentBase + '/' : '/';
+
+  const html = legalHtmlTemplate.replace(
     '<head>',
     `<head>\n  <base href="${baseHref}">\n  <script>window.__BASE_PATH__ = "${currentBase}";</script>`
   );

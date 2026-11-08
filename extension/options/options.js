@@ -9,6 +9,7 @@
   const testConnectionBtn = document.getElementById('testConnectionBtn');
   const copyIdBtn = document.getElementById('copyIdBtn');
   const statusMsg = document.getElementById('statusMsg');
+  const legalLink = document.getElementById('legalLink');
 
   // Apply theme to document
   function applyTheme(theme) {
@@ -53,6 +54,9 @@
       themeSelect.value = theme;
       applyTheme(theme);
       userIdDisplay.value = data.userId || 'Generating...';
+      if (legalLink) {
+        legalLink.href = `${backendUrlInput.value}/legal`;
+      }
     } catch (e) {
       console.error('Failed to load settings from storage:', e);
     }
