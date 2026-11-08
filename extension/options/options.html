@@ -7,49 +7,62 @@
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
-  <div class="options-card">
-    <div class="options-header">
-      <span class="logo-bubble">Scratch AI</span>
-      <div>
-        <h1>Extension Settings</h1>
-        <p style="font-size: 0.82rem; color: #575e75;">Server configuration & anonymous voter identity</p>
+  <div class="options-container">
+    <!-- Authentic Scratch Top Header Bar -->
+    <header class="header">
+      <div class="brand">
+        <span class="logo-bubble">Scratch AI</span>
+        <span class="brand-title">Extension Settings</span>
       </div>
-    </div>
+    </header>
 
     <div class="options-body">
       <form id="settingsForm">
+        <!-- Backend URL Field -->
         <div class="form-group">
           <label for="backendUrlInput">Backend Server URL</label>
           <input type="url" id="backendUrlInput" class="input-text" placeholder="http://localhost:3000" required>
-          <div style="font-size: 0.75rem; color: #73798c; margin-top: 4px;">
+          <div class="field-hint">
             Address of your central Node.js backend (Default: <code>http://localhost:3000</code>)
           </div>
         </div>
 
+        <!-- Appearance Field -->
         <div class="form-group">
-          <label for="themeSelect">Popup Appearance</label>
-          <select id="themeSelect">
+          <label for="themeSelect">Popup & Settings Theme</label>
+          <select id="themeSelect" class="input-select">
             <option value="auto">System Default (Auto)</option>
             <option value="light">Light Mode (Classic Scratch)</option>
             <option value="dark">Dark Mode</option>
           </select>
         </div>
 
+        <!-- Anonymous Voter UUID Field -->
         <div class="form-group">
-          <label>Your Anonymous Voter ID (UUID)</label>
-          <input type="text" id="userIdDisplay" class="input-text" readonly style="font-family: monospace; background: #f2f4f8; color: #cf8b17; font-weight: 700;">
-          <div style="font-size: 0.75rem; color: #73798c; margin-top: 4px;">
-            Unique identifier stored locally in your browser. No account required.
+          <label for="userIdDisplay">Your Anonymous Voter ID (UUID)</label>
+          <div class="input-with-button">
+            <input type="text" id="userIdDisplay" class="input-text input-uuid" readonly spellcheck="false" title="Your anonymous voter UUID">
+            <button type="button" id="copyIdBtn" class="btn btn-secondary btn-copy" title="Copy UUID to clipboard">
+              📋 Copy
+            </button>
+          </div>
+          <div class="field-hint">
+            Unique anonymous identifier stored locally. No account required.
           </div>
         </div>
 
+        <!-- Action Buttons -->
         <div class="btn-group">
-          <button type="submit" class="btn btn-primary">💾 Save Settings</button>
-          <button type="button" id="testConnectionBtn" class="btn btn-secondary">🔌 Test Connection</button>
-          <button type="button" id="copyIdBtn" class="btn btn-secondary">📋 Copy UUID</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">
+            💾 Save Settings
+          </button>
+          <button type="button" id="testConnectionBtn" class="btn btn-secondary">
+            🔌 Test Connection
+          </button>
         </div>
       </form>
 
+      <!-- Feedback / Status message -->
       <div id="statusMsg" class="status-msg"></div>
     </div>
   </div>
