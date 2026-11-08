@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cao AI Detector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Authentic Scratch Top Header Navigation Bar -->
+  <header class="header">
+    <div class="brand">
+      <span class="brand-icon">🐱</span>
+      <span class="brand-title">Cao AI Detector</span>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggleBtn" class="icon-btn" title="Toggle Dark/Light Mode">🌓</button>
+      <button id="openOptionsBtn" class="icon-btn" title="Settings">⚙️</button>
+    </div>
+  </header>
+
+  <div class="popup-container">
+    <!-- Error/Notice Banner -->
+    <div id="alertBanner" class="alert-banner"></div>
+
+    <!-- Active Scratch Project View -->
+    <div id="activeProjectView">
+      <!-- Project ID Banner -->
+      <div class="project-banner">
+        <div>
+          <span class="project-id-label">Scratch Project: </span>
+          <span id="displayProjectId" class="project-id-val">Detecting...</span>
+        </div>
+        <a id="openInScratchLink" href="#" target="_blank" rel="noopener noreferrer" style="font-size: 0.78rem; font-weight: 700; color: var(--scratch-blue); text-decoration: none;">View on Scratch ↗</a>
+      </div>
+
+      <!-- Voting Card -->
+      <section class="card">
+        <div class="question-text">Is this project AI-generated?</div>
+        <div class="vote-buttons">
+          <button id="voteAiBtn" class="btn-vote btn-vote-ai">
+            <span style="font-size: 1.4rem;">🤖</span>
+            <span>AI-generated</span>
+          </button>
+          <button id="voteHumanBtn" class="btn-vote btn-vote-human">
+            <span style="font-size: 1.4rem;">👤</span>
+            <span>Human-created</span>
+          </button>
+        </div>
+        <div id="userVoteStatus" class="user-vote-hint">Vote to contribute to community verdict</div>
+      </section>
+
+      <!-- Community Statistics Card -->
+      <section class="card">
+        <div class="stats-header">
+          <span class="stats-title">Community Statistics</span>
+          <span id="statTotalVotes" class="total-votes-count">0 votes</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-wrap">
+          <div id="progressAi" class="progress-ai" style="width: 50%;"></div>
+          <div id="progressHuman" class="progress-human" style="width: 50%;"></div>
+        </div>
+
+        <!-- Stats Breakdown Row -->
+        <div class="stats-row">
+          <span id="statAiVotes" style="color: var(--ai-text);">AI votes: 0 (0%)</span>
+          <span id="statHumanVotes" style="color: var(--human-text);">Human votes: 0 (0%)</span>
+        </div>
+
+        <!-- Community Verdict Box -->
+        <div class="verdict-box">
+          <span style="font-size: 0.82rem; font-weight: 700; color: var(--scratch-text-primary);">Community verdict:</span>
+          <span id="verdictBadge" class="verdict-badge verdict-insufficient">Insufficient data</span>
+        </div>
+
+        <!-- Disclaimer -->
+        <p class="disclaimer-text">
+          ⚠️ Community verdict based on human votes, not a technically verified AI detection result.
+        </p>
+      </section>
+    </div>
+
+    <!-- Empty State: Not on Scratch Project -->
+    <div id="emptyStateView" class="empty-state hidden">
+      <div class="empty-icon">🐱🔎</div>
+      <div class="empty-title">Not on a Scratch Project</div>
+      <div class="empty-sub">
+        Navigate to a project on <a href="https://scratch.mit.edu" target="_blank" style="color: var(--scratch-orange-dark); font-weight: 700;">scratch.mit.edu</a> to inspect or vote.
+      </div>
+
+      <!-- Quick Lookup by ID -->
+      <form id="quickLookupForm" class="lookup-form">
+        <input type="text" id="quickLookupInput" class="lookup-input" placeholder="Or enter Project ID..." pattern="\d+" required>
+        <button type="submit" class="btn-lookup">Inspect</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

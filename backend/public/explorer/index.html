@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cao AI Detector – Scratch Community Explorer</title>
+  <link rel="stylesheet" href="/explorer.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 0 100 100><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
+</head>
+<body>
+  <!-- Authentic Scratch Top Navbar -->
+  <header class="navbar">
+    <a href="/" class="nav-brand">
+      <span>🐱</span>
+      <span>Cao AI Detector <span class="nav-brand-sub">Community Explorer</span></span>
+    </a>
+    <div class="nav-actions">
+      <button id="exportVotesBtn" class="btn btn-secondary btn-sm" title="Download all community votes as CSV">📥 Download Votes CSV</button>
+      <button id="exportProjectsBtn" class="btn btn-secondary btn-sm" title="Download all projects as CSV">📊 Download Projects CSV</button>
+      <a href="/admin" class="btn btn-admin btn-sm" title="Sign in to Administrator Console">🛡️ Admin Console</a>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <div class="hero-banner">
+    <h1 class="hero-title">Scratch AI Detection Community Explorer</h1>
+    <p class="hero-subtitle">
+      Real-time community-driven classifications for Scratch projects. All data is verified by human votes from the Cao AI Detector Chrome extension.
+    </p>
+    <div class="hero-badges">
+      <div class="hero-badge-item"><span>🗳️</span> 100% Human Crowdsourced</div>
+      <div class="hero-badge-item"><span>🔒</span> 1 Vote Per User Guaranteed</div>
+      <div class="hero-badge-item"><span>⚡</span> Live Transactional Aggregation</div>
+      <div class="hero-badge-item"><span>📥</span> Open CSV Data Access</div>
+    </div>
+  </div>
+
+  <!-- Main Explorer Content -->
+  <main class="main-content">
+    <!-- Lookup Tool -->
+    <section class="section" style="padding: 1.25rem 1.5rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 700;">Lookup Scratch Project</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Enter any Scratch numeric project ID to view its community verdict & vote history</p>
+        </div>
+        <form id="searchProjectForm" class="search-form">
+          <input type="text" id="searchProjectIdInput" class="search-input" placeholder="Enter Project ID (e.g. 1012849182)" pattern="\d+" required>
+          <button type="submit" class="btn btn-search">Inspect Project</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Metrics Grid -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total Voters</div>
+        <div id="metricTotalUsers" class="metric-value">0</div>
+        <div class="metric-sub">Anonymous community participants</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Indexed Projects</div>
+        <div id="metricTotalProjects" class="metric-value">0</div>
+        <div class="metric-sub">Across scratch.mit.edu</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Total Community Votes</div>
+        <div id="metricTotalVotes" class="metric-value">0</div>
+        <div id="metricVoteBreakdown" class="metric-sub">0 AI • 0 Human</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Global Community Ratio</div>
+        <div class="ratio-container">
+          <div class="ratio-bar">
+            <div id="globalRatioAi" class="ratio-ai" style="width: 50%;"></div>
+            <div id="globalRatioHuman" class="ratio-human" style="width: 50%;"></div>
+          </div>
+          <div class="ratio-labels">
+            <span id="globalAiLabel" style="color: var(--scratch-stop-text);">🤖 AI: 0%</span>
+            <span id="globalHumanLabel" style="color: var(--scratch-green-text);">👤 Human: 0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Most Voted Projects Table -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-title">🔥 Most Voted Scratch Projects</div>
+        <button id="refreshStatsBtn" class="btn btn-secondary btn-sm">↻ Refresh Live Data</button>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Project ID</th>
+              <th>Total Votes</th>
+              <th>AI Votes</th>
+              <th>Human Votes</th>
+              <th>Community Ratio</th>
+              <th>Community Verdict</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="topProjectsTableBody">
+            <tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 2rem;">Loading community projects...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Recent Votes Activity Stream -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-title">⚡ Recent Community Votes</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">Real-time stream of the latest votes cast by users</div>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Project ID</th>
+              <th>Voter UUID</th>
+              <th>Vote Cast</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recentVotesTableBody">
+            <tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 2rem;">Loading recent votes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Project Inspection Modal (Read-Only) -->
+  <div id="projectModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalProjectTitle">Project Community Verdict</h2>
+          <a id="modalScratchLink" href="#" target="_blank" rel="noopener noreferrer" class="external-link" style="font-size: 0.85rem;">View on Scratch ↗</a>
+        </div>
+        <button id="closeModalBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Project Stats Box -->
+        <div id="modalStatsBox" style="background: #f8faff; padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+          <!-- Dynamically filled -->
+        </div>
+
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem;">Community Vote Log (Read-Only)</h4>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Voter (Masked UUID)</th>
+                <th>Vote</th>
+                <th>Time Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="modalVotesTableBody">
+              <!-- Dynamically filled -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalDoneBtn" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/explorer.js"></script>
+</body>
+</html>

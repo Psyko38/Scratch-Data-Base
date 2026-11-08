@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Cao AI Detector – Scratch AI Classifier",
+  "version": "1.0.0",
+  "description": "Community-driven AI detection for Scratch projects. Vote and view real-time verdicts on whether a project was created by a human or AI.",
+  "author": "Cao Team",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Cao AI Detector",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://scratch.mit.edu/*",
+    "http://localhost:3000/*",
+    "http://127.0.0.1:3000/*",
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://scratch.mit.edu/projects/*"
+      ],
+      "js": [
+        "content/content.js"
+      ],
+      "css": [
+        "content/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+  }
+}

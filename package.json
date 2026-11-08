@@ -1,0 +1,18 @@
+{
+  "name": "scratch-data-base",
+  "version": "1.0.0",
+  "description": "Cao AI Detector - Scratch Chrome Extension & Centralized Backend",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "test": "cd backend && npm test",
+    "db:init": "cd backend && npm run db:init",
+    "db:seed": "cd backend && npm run db:seed"
+  },
+  "keywords": [
+    "scratch",
+    "ai-detector"
+  ],
+  "author": "",
+  "license": "MIT"
+}

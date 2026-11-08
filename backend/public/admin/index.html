@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cao AI Detector – Admin Console</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 0 100 100><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+</head>
+<body>
+  <!-- Login Container -->
+  <div id="authView" class="auth-wrapper">
+    <div class="login-card">
+      <div class="brand-header">
+        <div class="brand-icon">🐱</div>
+        <div class="brand-title">
+          <h1>Cao AI Detector</h1>
+          <p>Administrator Console</p>
+        </div>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="usernameInput">Admin Username</label>
+          <input type="text" id="usernameInput" class="form-input" placeholder="admin" required autofocus autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="loginBtn" class="btn btn-primary">Sign In to Console</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard App -->
+  <div id="dashboardView" class="app-container hidden">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <span>🐱</span>
+        <span>Cao AI Detector <span class="nav-brand-sub">Admin Console</span></span>
+      </div>
+      <div class="nav-actions">
+        <span id="adminUsernameBadge"></span>
+        <button id="exportVotesBtn" class="btn btn-secondary btn-sm" title="Export all votes as CSV">📥 Export Votes CSV</button>
+        <button id="exportProjectsBtn" class="btn btn-secondary btn-sm" title="Export all projects as CSV">📊 Export Projects CSV</button>
+        <button id="logoutBtn" class="btn btn-secondary btn-sm">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Search Project Tool -->
+      <section class="section" style="padding: 1.25rem 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+          <div>
+            <h3 style="font-size: 1rem; font-weight: 600;">Lookup Scratch Project</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Search by Scratch numeric project ID to view vote details or moderate</p>
+          </div>
+          <form id="searchProjectForm" class="search-form">
+            <input type="text" id="searchProjectIdInput" class="search-input" placeholder="Enter Project ID (e.g. 1012849182)" pattern="\d+" required>
+            <button type="submit" class="btn btn-secondary">Search</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Key Metrics Grid -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Users</div>
+          <div id="metricTotalUsers" class="metric-value">0</div>
+          <div id="metricBannedUsers" class="metric-sub">0 banned</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Total Projects</div>
+          <div id="metricTotalProjects" class="metric-value">0</div>
+          <div class="metric-sub">Indexed across Scratch</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Total Votes</div>
+          <div id="metricTotalVotes" class="metric-value">0</div>
+          <div id="metricVoteBreakdown" class="metric-sub">0 AI • 0 Human</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Global Community Ratio</div>
+          <div class="ratio-container">
+            <div class="ratio-bar">
+              <div id="globalRatioAi" class="ratio-ai" style="width: 50%;"></div>
+              <div id="globalRatioHuman" class="ratio-human" style="width: 50%;"></div>
+            </div>
+            <div class="ratio-labels">
+              <span id="globalAiLabel" style="color: var(--scratch-stop-text);">🤖 AI: 0%</span>
+              <span id="globalHumanLabel" style="color: var(--scratch-green-text);">👤 Human: 0%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Most Voted Projects -->
+      <section class="section">
+        <div class="section-header">
+          <div class="section-title">🔥 Most Voted Scratch Projects</div>
+          <button id="refreshStatsBtn" class="btn btn-secondary btn-sm">↻ Refresh</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Project ID</th>
+                <th>Total Votes</th>
+                <th>AI Votes</th>
+                <th>Human Votes</th>
+                <th>AI / Human Ratio</th>
+                <th>Community Verdict</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="topProjectsTableBody">
+              <tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Loading projects...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Recent Votes Activity Stream -->
+      <section class="section">
+        <div class="section-header">
+          <div class="section-title">⚡ Recent Votes Stream</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Last 20 community votes submitted</div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Project ID</th>
+                <th>User ID</th>
+                <th>Vote</th>
+                <th>User Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="recentVotesTableBody">
+              <tr><td colspan="6" style="text-align:center; color: var(--text-muted);">Loading recent votes...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Project Details & Moderation Modal -->
+  <div id="projectModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalProjectTitle" style="font-size: 1.25rem;">Project Inspection</h2>
+          <a id="modalScratchLink" href="#" target="_blank" rel="noopener noreferrer" class="external-link" style="font-size: 0.85rem;">Open on Scratch ↗</a>
+        </div>
+        <button id="closeModalBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Project Stats Box -->
+        <div id="modalStatsBox" style="background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <!-- Dynamically filled -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 600;">Individual Vote History</h4>
+          <button id="resetProjectVotesBtn" class="btn btn-danger btn-sm">⚠️ Reset Project Stats to 0</button>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Voter UUID</th>
+                <th>Vote</th>
+                <th>Timestamp</th>
+                <th>Moderation</th>
+              </tr>
+            </thead>
+            <tbody id="modalVotesTableBody">
+              <!-- Dynamically filled -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalDoneBtn" class="btn btn-secondary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

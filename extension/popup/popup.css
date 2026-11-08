@@ -1,0 +1,500 @@
+/* ==========================================================================
+   AUTHENTIC SCRATCH DESIGN SYSTEM & TOKENS (scratch.mit.edu)
+   ========================================================================== */
+:root {
+  /* Scratch Brand Colors */
+  --scratch-purple: #855cd6;
+  --scratch-purple-dark: #714eb7;
+  --scratch-purple-active: #7854c0;
+  --scratch-purple-tint: rgba(133, 92, 214, 0.15);
+  --scratch-purple-ring: rgba(133, 92, 214, 0.35);
+
+  --scratch-blue: #4d97ff;
+  --scratch-blue-dark: #4280d7;
+  --scratch-blue-border: #3373cc;
+  --scratch-blue-tint: rgba(77, 151, 255, 0.1);
+
+  --scratch-orange: #ffab19;
+  --scratch-orange-dark: #cf8b17;
+  --scratch-orange-hover: #e69a17;
+  --scratch-orange-tint: rgba(244, 157, 37, 0.15);
+
+  /* Green Flag & Stop Sign */
+  --scratch-green: #4cbf56;
+  --scratch-green-stroke: #45993d;
+  --scratch-green-tint: rgba(76, 191, 86, 0.15);
+  --scratch-green-text: #287a38;
+
+  --scratch-stop: #ec5959;
+  --scratch-stop-stroke: #b84848;
+  --scratch-stop-tint: rgba(236, 89, 89, 0.15);
+  --scratch-stop-text: #b82d2d;
+
+  /* Neutrals & Surfaces */
+  --scratch-white: #ffffff;
+  --scratch-bg-main: #f9f9f9;
+  --scratch-bg-pane: #e9f1fc;
+  --scratch-bg-card: #ffffff;
+  --scratch-bg-hover: #f2f5fa;
+
+  /* Typography */
+  --scratch-text-primary: #575e75;
+  --scratch-text-dark: #323742;
+  --scratch-text-muted: #73798c;
+  --scratch-text-dim: #9aa1b3;
+
+  /* Borders & Shadows */
+  --scratch-border: rgba(0, 0, 0, 0.15);
+  --scratch-border-subtle: rgba(0, 0, 0, 0.08);
+  --scratch-shadow-nav: 0 0 3px 0 rgba(0, 0, 0, 0.25);
+  --scratch-shadow-card: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+
+  /* Border Radii */
+  --scratch-radius-sm: 4px;
+  --scratch-radius-md: 8px;
+  --scratch-radius-lg: 16px;
+  --scratch-radius-pill: 20px;
+  --scratch-radius-full: 9999px;
+
+  /* Extension Semantic Mappings */
+  --bg-primary: var(--scratch-bg-main);
+  --bg-card: var(--scratch-white);
+  --text-main: var(--scratch-text-dark);
+  --text-body: var(--scratch-text-primary);
+  --ai-color: var(--scratch-stop);
+  --ai-border: var(--scratch-stop-stroke);
+  --ai-bg: var(--scratch-stop-tint);
+  --ai-text: var(--scratch-stop-text);
+  --human-color: var(--scratch-green);
+  --human-border: var(--scratch-green-stroke);
+  --human-bg: var(--scratch-green-tint);
+  --human-text: var(--scratch-green-text);
+}
+
+[data-theme="dark"] {
+  --scratch-bg-main: #18191f;
+  --scratch-bg-card: #22232c;
+  --scratch-bg-hover: #2d2e3a;
+  --scratch-border: rgba(255, 255, 255, 0.15);
+  --scratch-border-subtle: rgba(255, 255, 255, 0.08);
+  --scratch-text-dark: #f0f3fc;
+  --scratch-text-primary: #bcc2d6;
+  --scratch-text-muted: #8d93a8;
+  --scratch-purple: #7854c0;
+  --scratch-purple-active: #6744ad;
+  --scratch-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.4);
+
+  --ai-text: #ff7b72;
+  --human-text: #56d364;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: var(--scratch-bg-main);
+  color: var(--scratch-text-dark);
+  width: 380px;
+  min-height: 440px;
+  line-height: 1.45;
+  user-select: none;
+  overflow-x: hidden;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Authentic Scratch Header Bar */
+.header {
+  background-color: var(--scratch-purple);
+  color: #ffffff;
+  height: 50px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--scratch-shadow-nav);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.brand-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin-left: 2px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--scratch-radius-sm);
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-size: 0.85rem;
+}
+
+.icon-btn:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Inner Container */
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 16px 16px;
+}
+
+/* Scratch Project Banner */
+.project-banner {
+  background: var(--scratch-bg-card);
+  border: 1px solid var(--scratch-border);
+  border-radius: var(--scratch-radius-md);
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  box-shadow: var(--scratch-shadow-card);
+}
+
+.project-id-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--scratch-text-primary);
+}
+
+.project-id-val {
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--scratch-orange-dark);
+}
+
+[data-theme="dark"] .project-id-val {
+  color: var(--scratch-orange);
+}
+
+/* Scratch Card Container */
+.card {
+  background-color: var(--scratch-bg-card);
+  border: 1px solid var(--scratch-border);
+  border-radius: var(--scratch-radius-md);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--scratch-shadow-card);
+}
+
+.question-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--scratch-text-dark);
+}
+
+/* Voting Buttons Styled after Scratch Action Elements */
+.vote-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.btn-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 10px;
+  border-radius: var(--scratch-radius-md);
+  cursor: pointer;
+  border: 2px solid var(--scratch-border);
+  background: var(--scratch-bg-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--scratch-text-dark);
+}
+
+.btn-vote:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--scratch-shadow-card);
+}
+
+.btn-vote:active {
+  transform: translateY(0);
+}
+
+/* AI Vote Button (Scratch Stop Sign style) */
+.btn-vote-ai {
+  border-color: rgba(236, 89, 89, 0.4);
+}
+
+.btn-vote-ai:hover {
+  background-color: var(--scratch-stop-tint);
+  border-color: var(--scratch-stop);
+}
+
+.btn-vote-ai.active-vote {
+  background-color: var(--scratch-stop-tint);
+  border-color: var(--scratch-stop);
+  box-shadow: 0 0 0 4px rgba(236, 89, 89, 0.35);
+  color: var(--ai-text);
+}
+
+/* Human Vote Button (Scratch Green Flag style) */
+.btn-vote-human {
+  border-color: rgba(76, 191, 86, 0.4);
+}
+
+.btn-vote-human:hover {
+  background-color: var(--scratch-green-tint);
+  border-color: var(--scratch-green);
+}
+
+.btn-vote-human.active-vote {
+  background-color: var(--scratch-green-tint);
+  border-color: var(--scratch-green);
+  box-shadow: 0 0 0 4px rgba(76, 191, 86, 0.35);
+  color: var(--human-text);
+}
+
+.user-vote-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--scratch-text-primary);
+  min-height: 18px;
+}
+
+/* Scratch Community Statistics */
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stats-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--scratch-text-primary);
+}
+
+.total-votes-count {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--scratch-text-dark);
+}
+
+/* Authentic Scratch Progress Bar */
+.progress-bar-wrap {
+  height: 12px;
+  background: var(--scratch-bg-main);
+  border-radius: var(--scratch-radius-pill);
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 8px;
+  border: 1px solid var(--scratch-border-subtle);
+}
+
+.progress-ai {
+  background-color: var(--scratch-stop);
+  height: 100%;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-human {
+  background-color: var(--scratch-green);
+  height: 100%;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* Community Verdict Box */
+.verdict-box {
+  background: var(--scratch-bg-main);
+  border: 1px solid var(--scratch-border-subtle);
+  border-radius: var(--scratch-radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--scratch-radius-pill);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.verdict-ai {
+  background: var(--scratch-stop-tint);
+  color: var(--ai-text);
+  border: 1px solid rgba(236, 89, 89, 0.4);
+}
+
+.verdict-human {
+  background: var(--scratch-green-tint);
+  color: var(--human-text);
+  border: 1px solid rgba(76, 191, 86, 0.4);
+}
+
+.verdict-undetermined {
+  background: var(--scratch-orange-tint);
+  color: var(--scratch-orange-dark);
+  border: 1px solid rgba(255, 171, 25, 0.4);
+}
+
+.verdict-insufficient {
+  background: var(--scratch-border-subtle);
+  color: var(--scratch-text-muted);
+  border: 1px solid var(--scratch-border);
+}
+
+.disclaimer-text {
+  font-size: 0.72rem;
+  color: var(--scratch-text-muted);
+  text-align: center;
+  line-height: 1.35;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  gap: 12px;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+}
+
+.empty-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--scratch-text-dark);
+}
+
+.empty-sub {
+  font-size: 0.82rem;
+  color: var(--scratch-text-primary);
+  max-width: 280px;
+}
+
+/* Quick Lookup Form */
+.lookup-form {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.lookup-input {
+  flex: 1;
+  padding: 8px 10px;
+  background: var(--scratch-bg-card);
+  border: 1px solid var(--scratch-border);
+  border-radius: var(--scratch-radius-sm);
+  color: var(--scratch-text-dark);
+  font-size: 0.85rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.lookup-input:focus {
+  border-color: var(--scratch-purple);
+  box-shadow: 0 0 0 3px var(--scratch-purple-ring);
+}
+
+.btn-lookup {
+  padding: 8px 14px;
+  background: var(--scratch-orange);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--scratch-radius-sm);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-lookup:hover {
+  background: var(--scratch-orange-dark);
+}
+
+/* Alerts */
+.alert-banner {
+  padding: 8px 12px;
+  border-radius: var(--scratch-radius-sm);
+  font-size: 0.78rem;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.alert-error {
+  background: var(--scratch-stop-tint);
+  color: var(--ai-text);
+  border: 1px solid rgba(236, 89, 89, 0.4);
+}
+
+.alert-success {
+  background: var(--scratch-green-tint);
+  color: var(--human-text);
+  border: 1px solid rgba(76, 191, 86, 0.4);
+}
+
+.hidden {
+  display: none !important;
+}

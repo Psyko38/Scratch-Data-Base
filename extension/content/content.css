@@ -1,0 +1,222 @@
+/* ==========================================================================
+   AUTHENTIC SCRATCH DESIGN SYSTEM - IN-PAGE FLOATING WIDGET
+   ========================================================================== */
+
+#cao-ai-detector-root {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999999;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+#cao-ai-detector-root * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card Container */
+.cao-card {
+  background: #ffffff;
+  color: #323742;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  width: 290px;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Authentic Scratch Purple Top Header */
+.cao-header {
+  background-color: #855cd6;
+  color: #ffffff;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.cao-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: #ffffff;
+}
+
+.cao-toggle-btn {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #ffffff;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.cao-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cao-body {
+  padding: 12px;
+  background: #ffffff;
+}
+
+.cao-verdict-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+/* Verdict Badges */
+.cao-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.cao-badge-ai {
+  background: rgba(236, 89, 89, 0.15);
+  color: #b82d2d;
+  border: 1px solid rgba(236, 89, 89, 0.35);
+}
+
+.cao-badge-human {
+  background: rgba(76, 191, 86, 0.15);
+  color: #287a38;
+  border: 1px solid rgba(76, 191, 86, 0.35);
+}
+
+.cao-badge-undetermined {
+  background: rgba(255, 171, 25, 0.15);
+  color: #cf8b17;
+  border: 1px solid rgba(255, 171, 25, 0.35);
+}
+
+.cao-badge-insufficient {
+  background: #f0f3f8;
+  color: #575e75;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Scratch Progress Bar */
+.cao-progress-wrap {
+  height: 8px;
+  background: #f0f3f8;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.cao-progress-ai {
+  background-color: #ec5959;
+  height: 100%;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cao-progress-human {
+  background-color: #4cbf56;
+  height: 100%;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Action Buttons Styled as Scratch Blocks/Pills */
+.cao-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cao-btn {
+  padding: 8px 6px;
+  border-radius: 6px;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  background: #f7f9fc;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  color: #323742;
+}
+
+.cao-btn:hover {
+  background: #edf1f7;
+  transform: translateY(-1px);
+}
+
+.cao-btn-ai:hover {
+  background: rgba(236, 89, 89, 0.12);
+  border-color: #ec5959;
+}
+
+.cao-btn-human:hover {
+  background: rgba(76, 191, 86, 0.12);
+  border-color: #4cbf56;
+}
+
+.cao-btn.cao-active {
+  font-weight: 700;
+}
+
+.cao-btn-ai.cao-active {
+  background: rgba(236, 89, 89, 0.18);
+  border-color: #ec5959;
+  color: #b82d2d;
+  box-shadow: 0 0 0 3px rgba(236, 89, 89, 0.3);
+}
+
+.cao-btn-human.cao-active {
+  background: rgba(76, 191, 86, 0.18);
+  border-color: #4cbf56;
+  color: #287a38;
+  box-shadow: 0 0 0 3px rgba(76, 191, 86, 0.3);
+}
+
+/* Floating Minimized Pill */
+.cao-minimized-pill {
+  background: #ffffff;
+  color: #323742;
+  padding: 8px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cao-minimized-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
