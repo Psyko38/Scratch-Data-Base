@@ -97,21 +97,30 @@ Scratch-Data-Base/
 │   │   └── utils/
 │   │       └── zipBuilder.js   # Extension package generator
 │   ├── public/
-│   │   ├── admin/              # Administrator Console
-│   │   └── explorer/           # Public Community Web Explorer
+│   │   └── explorer/           # Built Svelte assets & public static files
 │   ├── scripts/
 │   │   ├── init-db.js          # Database initialization
 │   │   └── seed.js             # Optional test data seeder
 │   └── tests/
-│       ├── api.test.js         # REST API & integration tests (30 tests)
+│       ├── api.test.js         # REST API & integration tests (38 tests)
 │       └── verdict.test.js     # Verdict unit tests
+├── frontend/                   # Modern Svelte 5 Frontend (Vite)
+│   ├── src/
+│   │   ├── components/         # Reactive Svelte components (Navbar, Hero, Stats, Carousels, Modals...)
+│   │   ├── stores/             # Reactive state (Auth, Theme, Toasts)
+│   │   ├── api.js              # API client & reverse-proxy subpath utilities
+│   │   ├── App.svelte          # Main SPA root & view controller
+│   │   └── main.js             # Svelte 5 mount entry point
+│   ├── index.html              # HTML template shell
+│   ├── vite.config.js          # Vite build config targeting backend/public/explorer
+│   └── package.json            # Frontend dependencies (Svelte 5, Vite)
 ├── data/                       # Production SQLite data directory (.gitkeep)
 ├── Dockerfile                  # Production container image (Node 22 Alpine)
 ├── docker-compose.yml          # Production stack configuration
 ├── extension/                  # Manifest V3 Extension (Chrome & Firefox)
 ├── docs/                       # Architecture & API documentation
 ├── .env.example                # Example environment variables
-├── package.json                # Root package & scripts
+├── package.json                # Root package & scripts (build, dev, test)
 └── README.md
 ```
 

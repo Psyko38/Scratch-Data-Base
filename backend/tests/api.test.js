@@ -356,6 +356,20 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.match(res.headers['content-type'], /text\/css/);
     });
 
+    it('GET /assets/main.js should serve compiled Svelte bundle', async () => {
+      const res = await request(app).get('/assets/main.js');
+      assert.equal(res.status, 200);
+      assert.match(res.headers['content-type'], /(?:application|text)\/javascript/);
+      assert.ok(res.text.length > 1000);
+    });
+
+    it('GET /scratch-ai/assets/main.js should serve compiled Svelte bundle under subpath', async () => {
+      const res = await request(app).get('/scratch-ai/assets/main.js');
+      assert.equal(res.status, 200);
+      assert.match(res.headers['content-type'], /(?:application|text)\/javascript/);
+      assert.ok(res.text.length > 1000);
+    });
+
     it('GET /scratch-ai/api/info should show endpoints prefixed with /scratch-ai', async () => {
       const res = await request(app).get('/scratch-ai/api/info');
       assert.equal(res.status, 200);

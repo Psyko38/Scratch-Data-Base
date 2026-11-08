@@ -1,20 +1,24 @@
 {
   "name": "scratch-ai-detector",
   "version": "1.0.0",
-  "description": "Scratch AI Detector - Browser Extension & Centralized Backend",
+  "description": "Scratch AI Detector - Browser Extension, Centralized Backend & Svelte Explorer",
   "engines": {
     "node": ">=22.5.0"
   },
   "scripts": {
-    "start": "cd backend && npm start",
+    "build": "cd frontend && npm run build",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
     "dev": "cd backend && npm run dev",
+    "start": "cd backend && npm start",
     "test": "cd backend && npm test",
     "db:init": "cd backend && npm run db:init",
     "db:seed": "cd backend && npm run db:seed"
   },
   "keywords": [
     "scratch",
-    "ai-detector"
+    "ai-detector",
+    "svelte"
   ],
   "author": "",
   "license": "MIT"

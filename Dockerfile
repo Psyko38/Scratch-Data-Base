@@ -7,14 +7,21 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Install dependencies for backend
+# Install dependencies for backend and frontend
 COPY backend/package*.json ./backend/
 RUN cd backend && npm install --omit=dev
+
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
 
 # Copy application files
 COPY backend ./backend
 COPY extension ./extension
+COPY frontend ./frontend
 COPY package.json ./
+
+# Build modern Svelte frontend
+RUN cd frontend && npm run build
 
 # Create data directory for SQLite persistence
 RUN mkdir -p /app/data

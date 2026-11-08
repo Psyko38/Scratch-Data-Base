@@ -53,7 +53,7 @@ app.use((req, res, next) => {
     return next();
   }
 
-  const KNOWN_ROOTS = '(?:api|admin|explore|legal|privacy|terms|about)';
+  const KNOWN_ROOTS = '(?:api|admin|explore|legal|privacy|terms|about|assets)';
 
   // 2. Direct bare access without trailing slash (e.g. GET /scratch-ai -> 301 to /scratch-ai/)
   const bareMatch = req.url.match(new RegExp(`^(\\/(?!${KNOWN_ROOTS}\\b)[a-zA-Z0-9_\\-]+)$`));
