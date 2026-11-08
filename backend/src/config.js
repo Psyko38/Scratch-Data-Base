@@ -1,6 +1,7 @@
 const path = require('node:path');
 const rootDir = path.resolve(__dirname, '../../');
 require('dotenv').config({ path: path.join(rootDir, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const rawDbPath = process.env.DATABASE_PATH || './data/scratch_ai_detector.db';
 const databasePath = rawDbPath === ':memory:'
