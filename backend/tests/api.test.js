@@ -318,13 +318,13 @@ describe('Cao AI Detector API Integration Tests', () => {
       const chromeRes = await request(app).get('/api/extension/download?browser=chrome').buffer(true);
       assert.equal(chromeRes.status, 200);
       assert.match(chromeRes.headers['content-type'], /application\/zip/);
-      assert.match(chromeRes.headers['content-disposition'], /cao-ai-detector-chrome-extension\.zip/);
+      assert.match(chromeRes.headers['content-disposition'], /scratch-ai-chrome-extension\.zip/);
       assert.ok(Number(chromeRes.headers['content-length']) > 1000);
 
       const firefoxRes = await request(app).get('/api/extension/download?browser=firefox').buffer(true);
       assert.equal(firefoxRes.status, 200);
       assert.match(firefoxRes.headers['content-type'], /application\/zip/);
-      assert.match(firefoxRes.headers['content-disposition'], /cao-ai-detector-firefox-extension\.zip/);
+      assert.match(firefoxRes.headers['content-disposition'], /scratch-ai-firefox-extension\.zip/);
       assert.ok(Number(firefoxRes.headers['content-length']) > 1000);
     });
   });

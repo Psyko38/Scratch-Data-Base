@@ -140,7 +140,7 @@
     const total = projectStats ? projectStats.totalVotes : 0;
 
     container.innerHTML = `
-      <div class="cao-stage-pill ${v.cls}" title="Cao AI Community Verdict (${total} vote${total === 1 ? '' : 's'})">
+      <div class="cao-stage-pill ${v.cls}" title="Scratch AI Community Verdict (${total} vote${total === 1 ? '' : 's'})">
         <span class="cao-stage-verdict-text">${escapeHtml(v.text)}</span>
         <div class="cao-stage-vote-btns">
           <button type="button" class="cao-stage-vbtn cao-vbtn-ai ${userVote === 'ai' ? 'active' : ''}" id="cao-stage-vote-ai" title="Vote: AI-generated" ${isSubmitting ? 'disabled' : ''}>🤖 AI</button>
@@ -270,7 +270,7 @@
 
     badge.className = `cao-thumb-badge ${info.cls}`;
     badge.textContent = info.text;
-    badge.title = `Cao AI Community Verdict: ${stats.totalVotes} vote(s) (${stats.aiVotes} AI / ${stats.humanVotes} Human)`;
+    badge.title = `Scratch AI Community Verdict: ${stats.totalVotes} vote(s) (${stats.aiVotes} AI / ${stats.humanVotes} Human)`;
   }
 
   function updateAllThumbnailBadges() {

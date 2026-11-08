@@ -123,7 +123,7 @@ function buildExtensionZip(browserTarget = 'chrome') {
       };
       manifest.browser_specific_settings = {
         gecko: {
-          id: 'cao-ai-detector@scratch-community.org',
+          id: 'scratch-ai@scratch-community.org',
           strict_min_version: '109.0'
         }
       };

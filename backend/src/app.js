@@ -59,8 +59,8 @@ app.get(['/', '/explore', '/explore/', '/admin', '/admin/'], (req, res) => {
 // JSON info route
 app.get('/api/info', (req, res) => {
   res.json({
-    name: 'Cao AI Detector API',
-    description: 'Centralized backend service for Scratch AI Detector Chrome Extension',
+    name: 'Scratch AI API',
+    description: 'Centralized backend service for Scratch AI Community Extension',
     version: '1.0.0',
     documentation: '/docs',
     endpoints: {

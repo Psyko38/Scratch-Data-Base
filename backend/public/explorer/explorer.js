@@ -1,4 +1,4 @@
-// Cao AI Detector – Unified Scratch Community Explorer & Admin User Management Controller
+// Scratch AI – Unified Community Explorer & Admin User Management Controller
 
 (function() {
   let authToken = localStorage.getItem('cao_admin_token') || '';
@@ -150,10 +150,16 @@
   function applyWebTheme(theme) {
     if (theme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
-      if (themeToggleBtn) themeToggleBtn.textContent = '☀️ Light Mode';
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = '☀️';
+        themeToggleBtn.title = 'Switch to Light Mode';
+      }
     } else {
       document.documentElement.removeAttribute('data-theme');
-      if (themeToggleBtn) themeToggleBtn.textContent = '🌙 Dark Mode';
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = '🌙';
+        themeToggleBtn.title = 'Switch to Dark Mode';
+      }
     }
   }
 
@@ -701,13 +707,17 @@
     loadCommunityStats();
   });
 
-  exportVotesBtn.addEventListener('click', () => {
-    window.location.href = '/api/export/csv?type=votes';
-  });
+  if (exportVotesBtn) {
+    exportVotesBtn.addEventListener('click', () => {
+      window.location.href = '/api/export/csv?type=votes';
+    });
+  }
 
-  exportProjectsBtn.addEventListener('click', () => {
-    window.location.href = '/api/export/csv?type=projects';
-  });
+  if (exportProjectsBtn) {
+    exportProjectsBtn.addEventListener('click', () => {
+      window.location.href = '/api/export/csv?type=projects';
+    });
+  }
 
   // Init both Public Community Data & Unified Admin Session
   loadCommunityStats();

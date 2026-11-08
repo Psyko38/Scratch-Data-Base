@@ -205,7 +205,7 @@ router.get('/extension/download', (req, res) => {
   const browser = req.query.browser === 'firefox' ? 'firefox' : 'chrome';
   try {
     const zipBuffer = buildExtensionZip(browser);
-    const filename = `cao-ai-detector-${browser}-extension.zip`;
+    const filename = `scratch-ai-${browser}-extension.zip`;
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Length', zipBuffer.length);
