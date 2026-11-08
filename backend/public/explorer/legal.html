@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scratch AI – Mentions Légales & Confidentialité</title>
+  <title>Scratch AI – Legal Notice, Privacy & Terms</title>
   <link rel="stylesheet" href="explorer.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 0 100 100><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
   <style>
@@ -119,177 +119,174 @@
   <header class="scratch-navbar">
     <div class="scratch-navbar-inner">
       <div class="nav-left">
-        <a href="./" class="scratch-logo" title="Retour à l'accueil">
+        <a href="./" class="scratch-logo" title="Back to Community Explorer">
           <span class="logo-bubble">Scratch AI</span>
         </a>
         <nav class="nav-links">
-          <a href="./" class="nav-link">← Retour à l'Explorer</a>
-          <a href="#about" class="nav-link">À Propos</a>
-          <a href="#mentions-legales" class="nav-link">Mentions Légales</a>
-          <a href="#confidentialite" class="nav-link">Confidentialité & RGPD</a>
-          <a href="#conditions" class="nav-link">Conditions d'Utilisation</a>
+          <a href="./" class="nav-link">← Community Explorer</a>
+          <a href="#about" class="nav-link">About & Methodology</a>
+          <a href="#legal-notice" class="nav-link">Legal Notice</a>
+          <a href="#privacy" class="nav-link">Privacy Policy (GDPR)</a>
+          <a href="#terms" class="nav-link">Terms of Service</a>
         </nav>
       </div>
     </div>
   </header>
 
   <div class="legal-container">
-    <a href="./" class="back-btn">← Retour à la plateforme Scratch AI</a>
+    <a href="./" class="back-btn">← Back to Scratch AI Community Explorer</a>
 
     <div class="legal-card">
       <div class="legal-header">
-        <h1 class="legal-title">Informations Légales, RGPD & À Propos</h1>
+        <h1 class="legal-title">Legal Notice, Privacy Policy (GDPR) & About</h1>
         <div class="legal-subtitle">
-          Dernière mise à jour : 8 novembre 2026 • Conforme aux lois françaises (LCEN) et européennes (RGPD n° 2016/679).
+          Last updated: November 8, 2026 • Compliant with EU GDPR (Regulation 2016/679), French LCEN law, and Chrome Web Store Policies.
         </div>
       </div>
 
       <!-- Quick Jump Navigation -->
       <nav class="legal-nav">
-        <a href="#about">ℹ️ À Propos & Méthodologie</a>
-        <a href="#mentions-legales">⚖️ Mentions Légales (LCEN)</a>
-        <a href="#confidentialite">🔒 Politique de Confidentialité (RGPD)</a>
-        <a href="#conditions">📜 Conditions d'Utilisation & Disclaimer</a>
+        <a href="#about">ℹ️ 1. About & Methodology</a>
+        <a href="#legal-notice">⚖️ 2. Legal Notice</a>
+        <a href="#privacy">🔒 3. Privacy Policy (GDPR)</a>
+        <a href="#terms">📜 4. Terms of Service & Disclaimer</a>
       </nav>
 
-      <!-- Section 1 : À Propos -->
+      <!-- Section 1 : About & Methodology -->
       <section id="about" class="legal-section">
-        <h2>ℹ️ 1. À Propos de Scratch AI</h2>
+        <h2>ℹ️ 1. About Scratch AI & Detection Methodology</h2>
         <p>
-          <strong>Scratch AI</strong> est une initiative communautaire et open-source ayant pour objectif d'offrir une plateforme participative de détection des projets générés par intelligence artificielle sur la plateforme éducative Scratch (<a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">scratch.mit.edu</a>).
+          <strong>Scratch AI</strong> is an independent, community-driven open-source initiative designed to provide crowdsourced AI detection classifications for Scratch projects (<a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">scratch.mit.edu</a>).
         </p>
         <p>
-          La plateforme associe :
+          The system combines:
         </p>
         <ul>
-          <li><strong>Une extension de navigateur (Chrome & Firefox)</strong> permettant aux utilisateurs d'évaluer directement les projets Scratch visités et de consulter l'avis de la communauté en temps réel.</li>
-          <li><strong>Une base de données centralisée et ouverte</strong> avec API REST publique permettant l'exportation transparente des données (Open Data CSV).</li>
-          <li><strong>Un explorateur web communautaire</strong> pour inspecter la répartition des votes sur les projets Scratch indexés.</li>
+          <li><strong>A lightweight browser extension (Chrome & Firefox)</strong> that allows users to cast classification votes directly on Scratch project pages and view real-time community verdicts.</li>
+          <li><strong>A centralized, transactional backend service</strong> ensuring one vote per user per project and live statistical aggregation.</li>
+          <li><strong>A public Community Web Explorer</strong> offering transparent read-only inspection and Open Data CSV downloads.</li>
         </ul>
 
-        <h3>Algorithme de Verdict</h3>
+        <h3>Verdict Determination Formula</h3>
         <p>
-          Le verdict affiché sur chaque projet est calculé strictement à partir de la formule démocratique suivante :
+          Project verdicts are calculated strictly and deterministically based on real community votes:
         </p>
         <ul>
-          <li><strong>Données insuffisantes (⏳ Insufficient data)</strong> : Si le projet a reçu strictement moins de 5 votes communautaires.</li>
-          <li><strong>Généré par IA (🤖 AI-generated)</strong> : Si au moins 5 votes sont enregistrés et que plus de 50% des votes indiquent une création par IA.</li>
-          <li><strong>Créé par un humain (👤 Human-created)</strong> : Si au moins 5 votes sont enregistrés et que plus de 50% des votes indiquent une création humaine.</li>
-          <li><strong>Indéterminé (⚖️ Undetermined)</strong> : Si au moins 5 votes sont enregistrés et que le ratio est exactement de 50% / 50%.</li>
+          <li><strong>Insufficient data (⏳)</strong>: Fewer than 5 community votes have been cast.</li>
+          <li><strong>AI-generated (🤖)</strong>: At least 5 votes recorded, and AI votes represent more than 50% of the total.</li>
+          <li><strong>Human-created (👤)</strong>: At least 5 votes recorded, and Human votes represent more than 50% of the total.</li>
+          <li><strong>Undetermined (⚖️)</strong>: At least 5 votes recorded, and AI and Human votes are exactly equal (50% / 50%).</li>
         </ul>
       </section>
 
-      <!-- Section 2 : Mentions Légales -->
-      <section id="mentions-legales" class="legal-section">
-        <h2>⚖️ 2. Mentions Légales (Article 6 de la Loi n° 2004-575 du 21 juin 2004 - LCEN)</h2>
+      <!-- Section 2 : Legal Notice (LCEN) -->
+      <section id="legal-notice" class="legal-section">
+        <h2>⚖️ 2. Legal Notice (French LCEN Law Article 6, III-1)</h2>
 
-        <h3>2.1. Éditeur du Service</h3>
+        <h3>2.1. Publisher & Project Maintainer</h3>
         <p>
-          Le service <strong>Scratch AI</strong> (site web et extension de navigateur) est édité et maintenu par :
+          The <strong>Scratch AI</strong> service (website, API, and browser extension) is developed, edited, and maintained by:
         </p>
         <ul>
-          <li><strong>Responsable de la publication / Développeur</strong> : Mattéo Banzet</li>
-          <li><strong>Statut</strong> : Projet communautaire bénévole, open-source et sans but lucratif</li>
-          <li><strong>Dépôt public de développement</strong> : <a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">https://github.com/matteocao/Scratch-Data-Base</a></li>
+          <li><strong>Author & Publisher</strong>: Mattéo Banzet</li>
+          <li><strong>Project Nature</strong>: Volunteer, open-source community software project</li>
+          <li><strong>Public Source Code Repository</strong>: <a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">https://github.com/matteocao/Scratch-Data-Base</a></li>
         </ul>
 
-        <h3>2.2. Hébergeur du Service</h3>
+        <h3>2.2. Web Hosting Provider</h3>
         <p>
-          L'infrastructure serveur et la base de données sont hébergées par :
+          Server infrastructure and SQLite data storage are hosted by:
         </p>
         <ul>
-          <li><strong>Hébergeur</strong> : Alwaysdata SARL</li>
-          <li><strong>Siège social</strong> : 91 rue du Faubourg Saint-Honoré, 75008 Paris, France</li>
-          <li><strong>Immatriculation</strong> : RCS Paris 492 893 490</li>
-          <li><strong>Téléphone</strong> : +33 1 84 16 23 40</li>
-          <li><strong>Site web</strong> : <a href="https://www.alwaysdata.com" target="_blank" rel="noopener noreferrer">https://www.alwaysdata.com</a></li>
+          <li><strong>Hosting Provider</strong>: Alwaysdata SARL</li>
+          <li><strong>Registered Office</strong>: 91 rue du Faubourg Saint-Honoré, 75008 Paris, France</li>
+          <li><strong>Commercial Registry</strong>: RCS Paris 492 893 490</li>
+          <li><strong>Phone</strong>: +33 1 84 16 23 40</li>
+          <li><strong>Website</strong>: <a href="https://www.alwaysdata.com" target="_blank" rel="noopener noreferrer">https://www.alwaysdata.com</a></li>
         </ul>
 
-        <h3>2.3. Propriété Intellectuelle et Clause de Non-Affiliation</h3>
+        <h3>2.3. Intellectual Property & Non-Affiliation Disclaimer</h3>
         <div class="legal-alert">
-          <strong>Avis d'indépendance obligatoire :</strong><br>
-          <em>Scratch</em> est une marque déposée de la <strong>Scratch Foundation</strong> et du <strong>MIT Media Lab</strong> (Massachusetts Institute of Technology).<br>
-          Le présent projet <strong>Scratch AI</strong> est un projet tiers, indépendant et open-source. Il n'est en aucun cas affilié, sponsorisé, associé ou approuvé par la Scratch Foundation, le MIT ou l'équipe officielle de Scratch (Scratch Team).
+          <strong>Mandatory Non-Affiliation Notice:</strong><br>
+          <em>Scratch</em> is a registered trademark of the <strong>Scratch Foundation</strong> and the <strong>MIT Media Lab</strong> (Massachusetts Institute of Technology).<br>
+          <strong>Scratch AI</strong> is an independent third-party open-source project. It is not affiliated with, endorsed by, sponsored by, or associated in any way with the Scratch Foundation, the MIT Media Lab, or the Scratch Team.
         </div>
         <p>
-          Le code source de Scratch AI est distribué librement sous licence <strong>MIT License</strong>.
+          All Scratch AI software code and documentation are released freely under the terms of the <strong>MIT License</strong>.
         </p>
       </section>
 
-      <!-- Section 3 : Politique de Confidentialité (RGPD) -->
-      <section id="confidentialite" class="legal-section">
-        <h2>🔒 3. Politique de Confidentialité & Conformité RGPD</h2>
+      <!-- Section 3 : Privacy Policy (GDPR) -->
+      <section id="privacy" class="legal-section">
+        <h2>🔒 3. Privacy Policy & GDPR Compliance</h2>
         <p>
-          Scratch AI a été conçu selon le principe de <em>Privacy by Design</em> (minimisation stricte des données, conformément au Règlement Général sur la Protection des Données - RGPD UE n° 2016/679 et aux règles pour développeurs du Chrome Web Store).
+          Scratch AI operates strictly on the principle of <em>Privacy by Design</em> and data minimization in compliance with the EU General Data Protection Regulation (GDPR n° 2016/679) and Google Chrome Web Store Developer Privacy Requirements.
         </p>
 
-        <h3>3.1. Données Collectées</h3>
+        <h3>3.1. Collected Data</h3>
         <ul>
           <li>
-            <strong>Identifiant aléatoire (UUID v4)</strong> : Lors de la première utilisation de l'extension, un identifiant aléatoire (ex. <code>ba99d8b9-a998-45fd-8f43-62f09baa79b8</code>) est généré localement dans votre navigateur (`chrome.storage.local`).
-            Cet identifiant est <strong>strictement anonyme et pseudonyme</strong>. Il ne contient aucun nom, aucune adresse e-mail, aucun mot de passe ni aucune donnée biométrique.
+            <strong>Random Anonymous Voter ID (UUID v4)</strong>: On first installation, a random UUID string (e.g., <code>ba99d8b9-a998-45fd-8f43-62f09baa79b8</code>) is generated locally inside your browser storage (<code>chrome.storage.local</code>).
+            This identifier contains <strong>zero personal identity data</strong> (no name, no email address, no password, no phone number, and no tracking cookies).
           </li>
           <li>
-            <strong>Vos votes communautaires</strong> : L'identifiant public du projet Scratch évalué (ex: <code>1012849182</code>), la date du vote et votre choix (<code>ai</code> ou <code>human</code>).
+            <strong>Classification Choice & Project ID</strong>: When you submit a vote, only the numeric Scratch project ID (e.g., <code>1012849182</code>), your choice (<code>ai</code> or <code>human</code>), and the submission timestamp are stored.
           </li>
           <li>
-            <strong>Journalisation technique temporaire</strong> : Les requêtes HTTP reçues par le serveur incluent l'adresse IP pour le fonctionnement du mécanisme de sécurité anti-flood (limitation de débit Express Rate Limiter). Ces adresses IP ne sont pas liées à votre identité et ne sont pas vendues ni conservées à des fins de profilage.
+            <strong>Technical Connection Logs</strong>: Incoming HTTP requests include technical IP addresses processed solely in memory for sliding-window anti-spam rate limiting. IP addresses are not linked to your identity and are never sold or used for profiling.
           </li>
         </ul>
 
-        <h3>3.2. Données qui ne sont JAMAIS collectées</h3>
+        <h3>3.2. Data That Is NEVER Collected</h3>
         <ul>
-          <li>❌ Aucun nom, prénom, adresse e-mail ou numéro de téléphone.</li>
-          <li>❌ Aucun identifiant ou mot de passe de compte Scratch officiel.</li>
-          <li>❌ Aucun historique de navigation en dehors des pages publiques de projets Scratch.</li>
-          <li>❌ Aucun traceur publicitaire, aucun cookie tiers, aucun outil de tracking (pas de Google Analytics, pas de pixel Facebook).</li>
+          <li>❌ No personal names, real-world identities, or email addresses.</li>
+          <li>❌ No Scratch account login credentials or session tokens.</li>
+          <li>❌ No general browsing history outside public Scratch project pages.</li>
+          <li>❌ No advertising cookies, third-party analytics (Google Analytics, Meta Pixel), or behavioral trackers.</li>
         </ul>
 
-        <h3>3.3. Finalité et Base Légale du Traitement</h3>
+        <h3>3.3. Purpose and Legal Basis (GDPR Art. 6.1.f)</h3>
         <p>
-          Le traitement de l'identifiant UUID et des votes repose sur l'<strong>intérêt légitime</strong> (Art. 6.1.f du RGPD) d'assurer le fonctionnement loyal et intègre du service collaboratif :
+          Processing is founded on the <strong>legitimate interest</strong> of maintaining a fair, abuse-resistant crowdsourced service:
         </p>
         <ul>
-          <li>Empêcher les votes multiples frauduleux sur un même projet grâce à la contrainte d'unicité `UNIQUE(user_id, project_id)`.</li>
-          <li>Permettre à un utilisateur de modifier son vote précédent s'il change d'avis, sans dupliquer les compteurs.</li>
+          <li>Preventing ballot-box stuffing and fraudulent duplicate votes via the database constraint <code>UNIQUE(user_id, project_id)</code>.</li>
+          <li>Allowing voters to modify their previous choice on a project without inflating vote counts.</li>
         </ul>
 
-        <h3>3.4. Durée de Conservation et Droits des Utilisateurs (Articles 15 à 22 du RGPD)</h3>
-        <p>
-          Vous bénéficiez des droits suivants :
-        </p>
+        <h3>3.4. Data Retention & User Rights (GDPR Articles 15 to 22)</h3>
         <ul>
-          <li><strong>Droit à l'effacement et réinitialisation</strong> : Vous pouvez réinitialiser ou supprimer votre identifiant UUID à tout moment en désinstallant l'extension ou en effaçant les données locales dans votre navigateur.</li>
-          <li><strong>Droit d'accès et d'opposition</strong> : Vous pouvez demander la suppression de votes associés à votre UUID en fournissant cet identifiant au développeur via le dépôt GitHub du projet.</li>
+          <li><strong>Right of Erasure & Reset</strong>: You can reset or delete your local UUID at any time by uninstalling the extension or clearing local browser extension storage.</li>
+          <li><strong>Right of Access & Inquiries</strong>: Users may request information or deletion of votes associated with their specific UUID by opening an issue on GitHub.</li>
         </ul>
       </section>
 
-      <!-- Section 4 : Conditions d'Utilisation -->
-      <section id="conditions" class="legal-section">
-        <h2>📜 4. Conditions d'Utilisation & Avertissement (Disclaimer)</h2>
+      <!-- Section 4 : Terms of Service & Disclaimer -->
+      <section id="terms" class="legal-section">
+        <h2>📜 4. Terms of Service & Community Disclaimer</h2>
 
-        <h3>4.1. Valeur des Verdicts</h3>
+        <h3>4.1. Nature of Verdicts</h3>
         <div class="legal-alert" style="background: rgba(77, 151, 255, 0.12); border-left-color: var(--scratch-blue, #4d97ff);">
-          <strong>Avertissement important sur les résultats :</strong><br>
-          Les résultats et verdicts affichés par Scratch AI représentent <strong>uniquement des opinions participatives émises par la communauté</strong> d'utilisateurs.<br>
-          Ils ne constituent en aucun cas une preuve technique ou médico-légale infaillible, ni un jugement définitif sur le travail des créateurs Scratch.
+          <strong>Disclaimer of Opinion:</strong><br>
+          All verdicts and statistics displayed by Scratch AI represent <strong>strictly participatory community opinions</strong>.<br>
+          They do not constitute technically verified forensic analysis, guaranteed factual claims, or official judgments regarding any Scratch project creator.
         </div>
 
-        <h3>4.2. Règles de Conduite et Anti-Abus</h3>
+        <h3>4.2. Acceptable Use Policy</h3>
         <p>
-          Il est formellement interdit :
+          Users must not:
         </p>
         <ul>
-          <li>D'utiliser des robots, scripts de scraping ou attaques automatisées pour fausser délibérément les statistiques d'un projet Scratch.</li>
-          <li>De tenter de contourner les mesures de limitation de débit ou de modération.</li>
+          <li>Deploy automated scripts, bots, or scraping tools to artificially manipulate project statistics.</li>
+          <li>Attempt to bypass rate limiting or moderation controls.</li>
         </ul>
         <p>
-          L'administrateur du service se réserve le droit de bannir tout UUID associé à des comportements abusifs ou du spam de votes.
+          The service administrators reserve the right to ban abusive UUIDs and purge fraudulent voting batches.
         </p>
 
-        <h3>4.3. Contact</h3>
+        <h3>4.3. Inquiries & Contact</h3>
         <p>
-          Pour toute question légale, signalement de vote abusif ou demande relative au RGPD, vous pouvez ouvrir un ticket sur le dépôt GitHub officiel :<br>
+          For legal inquiries, abuse reports, or data deletion requests, please open a ticket on the official GitHub repository:<br>
           👉 <a href="https://github.com/matteocao/Scratch-Data-Base/issues" target="_blank" rel="noopener noreferrer">https://github.com/matteocao/Scratch-Data-Base/issues</a>
         </p>
       </section>
@@ -302,29 +299,29 @@
       <div class="footer-col">
         <h4>Navigation</h4>
         <ul>
-          <li><a href="./">Retour à l'Explorer</a></li>
-          <li><a href="#about">À Propos</a></li>
-          <li><a href="#mentions-legales">Mentions Légales</a></li>
+          <li><a href="./">Back to Explorer</a></li>
+          <li><a href="#about">About & Methodology</a></li>
+          <li><a href="#legal-notice">Legal Notice</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Confidentialité</h4>
+        <h4>Privacy & Terms</h4>
         <ul>
-          <li><a href="#confidentialite">Politique de Confidentialité</a></li>
-          <li><a href="#conditions">Conditions d'Utilisation</a></li>
-          <li><a href="api/health" target="_blank">Statut Serveur</a></li>
+          <li><a href="#privacy">Privacy Policy (GDPR)</a></li>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="api/health" target="_blank">Server Health</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Communauté</h4>
+        <h4>Community</h4>
         <ul>
-          <li><a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">Site officiel Scratch ↗</a></li>
-          <li><a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">Code Source (GitHub) ↗</a></li>
+          <li><a href="https://scratch.mit.edu" target="_blank" rel="noopener noreferrer">Official Scratch Website ↗</a></li>
+          <li><a href="https://github.com/matteocao/Scratch-Data-Base" target="_blank" rel="noopener noreferrer">Source Code (GitHub) ↗</a></li>
         </ul>
       </div>
     </div>
     <div class="scratch-footer-bottom">
-      <p>Scratch AI est un projet communautaire open-source indépendant, non affilié à la Scratch Foundation ou au MIT Media Lab.</p>
+      <p>Scratch AI is an independent open-source community project, not affiliated with the Scratch Foundation or the MIT Media Lab.</p>
     </div>
   </footer>
 </body>

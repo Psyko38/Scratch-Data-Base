@@ -383,13 +383,13 @@ describe('Cao AI Detector API Integration Tests', () => {
     it('GET /legal, /privacy, /terms should serve complete legal and GDPR compliance page', async () => {
       const legalRes = await request(app).get('/legal');
       assert.equal(legalRes.status, 200);
-      assert.match(legalRes.text, /Mentions Légales/);
-      assert.match(legalRes.text, /Politique de Confidentialité/);
+      assert.match(legalRes.text, /Legal Notice/);
+      assert.match(legalRes.text, /Privacy Policy/);
       assert.match(legalRes.text, /Alwaysdata/);
 
       const privacyRes = await request(app).get('/privacy');
       assert.equal(privacyRes.status, 200);
-      assert.match(privacyRes.text, /RGPD/);
+      assert.match(privacyRes.text, /GDPR/);
     });
   });
 });
