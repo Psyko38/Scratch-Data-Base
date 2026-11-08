@@ -21,6 +21,25 @@
   </header>
 
   <div class="popup-container">
+    <!-- Live Update Notification Banner -->
+    <div id="updateBanner" class="update-banner hidden">
+      <div class="update-banner-inner">
+        <div class="update-banner-header">
+          <div class="update-badge">
+            <span class="update-pulse"></span>
+            <span>🚀 Mise à jour disponible !</span>
+          </div>
+          <button id="dismissUpdateBtn" class="update-dismiss-btn" title="Ignorer pour le moment">&times;</button>
+        </div>
+        <div class="update-banner-desc">
+          Une nouvelle version de Scratch AI est disponible sur le serveur.
+        </div>
+        <a id="downloadUpdateBtn" href="#" target="_blank" rel="noopener noreferrer" class="update-download-btn">
+          📥 Télécharger la mise à jour (.zip)
+        </a>
+      </div>
+    </div>
+
     <!-- Error/Notice Banner -->
     <div id="alertBanner" class="alert-banner"></div>
 

@@ -6,9 +6,11 @@ const path = require('node:path');
 const config = require('./config');
 const db = require('./db/database');
 const { apiLimiter } = require('./middleware/rateLimiter');
+const { getExtensionHash, syncVersionFile } = require('./utils/versionHash');
 
-// Initialize database schema and admin account
+// Initialize database schema, admin account, and extension version hash
 db.init();
+syncVersionFile();
 
 const app = express();
 
@@ -107,6 +109,23 @@ app.get(['/', '/explore', '/explore/', '/admin', '/admin/'], (req, res) => {
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(html);
+});
+
+// Extension Version & Update Check Endpoint
+app.get('/api/version', (req, res) => {
+  const base = req.basePath || configuredBasePath || '';
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+  const host = req.get('host');
+  const serverUrl = host ? `${protocol}://${host}${base}` : '';
+  res.json({
+    version: '1.0.0',
+    extensionHash: getExtensionHash(),
+    downloadUrl: `${serverUrl}/api/extension/download?browser=chrome`,
+    downloadUrls: {
+      chrome: `${serverUrl}/api/extension/download?browser=chrome`,
+      firefox: `${serverUrl}/api/extension/download?browser=firefox`
+    }
+  });
 });
 
 // JSON info route

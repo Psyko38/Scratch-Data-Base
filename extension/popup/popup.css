@@ -463,6 +463,108 @@ body {
   background: var(--scratch-purple-dark);
 }
 
+/* Live Update Notification Banner */
+.update-banner {
+  background: linear-gradient(135deg, rgba(133, 92, 214, 0.12) 0%, rgba(255, 171, 25, 0.15) 100%);
+  border: 1px solid var(--scratch-purple);
+  border-radius: var(--scratch-radius-md);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(133, 92, 214, 0.15);
+  animation: slideDown 0.25s ease-out;
+}
+
+[data-theme="dark"] .update-banner {
+  background: linear-gradient(135deg, rgba(120, 84, 192, 0.25) 0%, rgba(229, 154, 30, 0.2) 100%);
+  border-color: rgba(133, 92, 214, 0.6);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.update-banner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.update-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--scratch-purple);
+}
+
+[data-theme="dark"] .update-badge {
+  color: #c9b1ff;
+}
+
+.update-pulse {
+  width: 8px;
+  height: 8px;
+  background-color: var(--scratch-orange);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(255, 171, 25, 0.7);
+  animation: pulseDot 1.8s infinite;
+}
+
+@keyframes pulseDot {
+  0% { box-shadow: 0 0 0 0 rgba(255, 171, 25, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(255, 171, 25, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 171, 25, 0); }
+}
+
+.update-dismiss-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--scratch-text-muted);
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.15s ease;
+}
+
+.update-dismiss-btn:hover {
+  color: var(--scratch-text-dark);
+}
+
+.update-banner-desc {
+  font-size: 0.72rem;
+  color: var(--scratch-text-primary);
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.update-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--scratch-purple);
+  color: #ffffff !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--scratch-radius-sm);
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.update-download-btn:hover {
+  background-color: var(--scratch-purple-dark);
+}
+
+.update-download-btn:active {
+  transform: translateY(1px);
+}
+
 /* Alerts */
 .alert-banner {
   padding: 7px 10px;

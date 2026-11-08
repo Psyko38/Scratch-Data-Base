@@ -11,6 +11,9 @@
   const activeProjectView = document.getElementById('activeProjectView');
   const emptyStateView = document.getElementById('emptyStateView');
   const alertBanner = document.getElementById('alertBanner');
+  const updateBanner = document.getElementById('updateBanner');
+  const downloadUpdateBtn = document.getElementById('downloadUpdateBtn');
+  const dismissUpdateBtn = document.getElementById('dismissUpdateBtn');
 
   const openExplorerBrandLink = document.getElementById('openExplorerBrandLink');
   const openExplorerBtn = document.getElementById('openExplorerBtn');
@@ -81,6 +84,39 @@
     }
   });
 
+  if (dismissUpdateBtn) {
+    dismissUpdateBtn.addEventListener('click', () => {
+      updateBanner.classList.add('hidden');
+    });
+  }
+
+  // Check if a new version is available on the server by comparing code hashes
+  async function checkForUpdates(url) {
+    try {
+      // 1. Read local hash from bundled version.json
+      const localVerRes = await fetch(chrome.runtime.getURL('version.json'));
+      if (!localVerRes.ok) return;
+      const localVer = await localVerRes.json();
+      const localHash = localVer.hash;
+      if (!localHash) return;
+
+      // 2. Fetch server version & extension hash
+      const res = await fetch(`${url}/api/version`);
+      if (!res.ok) return;
+      const serverData = await res.json();
+      const serverHash = serverData.extensionHash;
+
+      // 3. Compare hashes
+      if (serverHash && serverHash !== 'dev-unknown' && serverHash !== localHash) {
+        const downloadUrl = serverData.downloadUrl || `${url}/api/extension/download?browser=chrome`;
+        if (downloadUpdateBtn) downloadUpdateBtn.href = downloadUrl;
+        if (updateBanner) updateBanner.classList.remove('hidden');
+      }
+    } catch (e) {
+      // Offline / server unreachable: fail silently
+    }
+  }
+
   function showAlert(msg, isError = true) {
     alertBanner.textContent = msg;
     alertBanner.className = `alert-banner ${isError ? 'alert-error' : 'alert-success'}`;
@@ -112,6 +148,9 @@
     backendUrl = normalizeUrl(stored.backendUrl);
     if (openExplorerBrandLink) openExplorerBrandLink.href = backendUrl;
     if (openExplorerBtn) openExplorerBtn.href = backendUrl;
+
+    // Check for extension updates from the backend server
+    checkForUpdates(backendUrl);
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs && tabs[0];

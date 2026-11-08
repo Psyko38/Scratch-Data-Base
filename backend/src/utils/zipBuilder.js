@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { getExtensionHash } = require('./versionHash');
 
 // CRC32 Table for standard ZIP archive creation without external dependencies
 const CRC_TABLE = new Uint32Array(256);
@@ -127,6 +128,19 @@ function buildExtensionZip(browserTarget = 'chrome', serverUrl = null) {
         str = str.replace(/http:\/\/localhost:3000/g, serverUrl);
         content = Buffer.from(str, 'utf8');
       }
+    }
+
+    if (file.name === 'version.json') {
+      const currentHash = getExtensionHash();
+      const verObj = {
+        version: '1.0.0',
+        hash: currentHash,
+        packagedAt: new Date().toISOString()
+      };
+      return {
+        name: 'version.json',
+        data: Buffer.from(JSON.stringify(verObj, null, 2) + '\n', 'utf8')
+      };
     }
 
     if (file.name === 'manifest.json') {

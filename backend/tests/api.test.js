@@ -370,5 +370,14 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.match(res.text, /<base href="\/proxy-subpath\/">/);
       assert.match(res.text, /window\.__BASE_PATH__ = "\/proxy-subpath"/);
     });
+
+    it('GET /api/version should return extension version and deterministic code hash', async () => {
+      const res = await request(app).get('/api/version');
+      assert.equal(res.status, 200);
+      assert.equal(res.body.version, '1.0.0');
+      assert.ok(typeof res.body.extensionHash === 'string');
+      assert.equal(res.body.extensionHash.length, 16);
+      assert.match(res.body.downloadUrl, /\/api\/extension\/download\?browser=chrome/);
+    });
   });
 });

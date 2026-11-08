@@ -48,6 +48,17 @@
   ],
   "options_ui": {
     "page": "options/options.html",
-    "open_in_tab": false
-  }
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "version.json",
+        "icons/*"
+      ],
+      "matches": [
+        "*://scratch.mit.edu/*"
+      ]
+    }
+  ]
 }
