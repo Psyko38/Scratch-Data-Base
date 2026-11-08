@@ -84,13 +84,18 @@ router.get('/users', requireAdminAuth, (req, res) => {
         u.is_banned,
         u.created_at,
         u.updated_at,
+        CASE
+          WHEN MAX(v.updated_at) IS NOT NULL AND (u.updated_at IS NULL OR MAX(v.updated_at) > u.updated_at)
+            THEN MAX(v.updated_at)
+          ELSE COALESCE(u.updated_at, u.created_at)
+        END as last_activity,
         COUNT(v.id) as total_votes,
         COALESCE(SUM(CASE WHEN v.vote = 'ai' THEN 1 ELSE 0 END), 0) as ai_votes,
         COALESCE(SUM(CASE WHEN v.vote = 'human' THEN 1 ELSE 0 END), 0) as human_votes
       FROM users u
       LEFT JOIN votes v ON u.id = v.user_id
       GROUP BY u.id
-      ORDER BY u.updated_at DESC
+      ORDER BY last_activity DESC
     `);
 
     const totalUsers = users.length;
@@ -107,7 +112,8 @@ router.get('/users', requireAdminAuth, (req, res) => {
         aiVotes: u.ai_votes || 0,
         humanVotes: u.human_votes || 0,
         createdAt: u.created_at,
-        updatedAt: u.updated_at
+        updatedAt: u.last_activity,
+        lastActivity: u.last_activity
       }))
     });
   } catch (err) {

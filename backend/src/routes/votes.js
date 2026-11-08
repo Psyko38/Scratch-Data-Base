@@ -88,6 +88,12 @@ router.post('/votes', voteLimiter, validateVoteSubmission, (req, res) => {
         [counts.total, counts.ai, counts.human, now, projectId]
       );
 
+      // Keep user updated_at in sync with latest activity
+      db.execute(
+        'UPDATE users SET updated_at = ? WHERE id = ?',
+        [now, userId]
+      );
+
       const updatedProjectRow = db.queryOne(
         'SELECT * FROM projects WHERE project_id = ?',
         [projectId]

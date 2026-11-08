@@ -194,7 +194,7 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.ok(Array.isArray(res.body.recentVotes));
     });
 
-    it('GET /api/admin/users with Bearer token should return user management list', async () => {
+    it('GET /api/admin/users with Bearer token should return user management list with accurate last activity', async () => {
       const res = await request(app)
         .get('/api/admin/users')
         .set('Authorization', `Bearer ${adminToken}`);
@@ -202,6 +202,10 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.ok(typeof res.body.totalUsers === 'number');
       assert.ok(Array.isArray(res.body.users));
       assert.ok(res.body.users.length >= 1);
+      const user = res.body.users.find(u => u.userId === testUserId1);
+      assert.ok(user);
+      assert.ok(user.lastActivity || user.updatedAt);
+      assert.ok(new Date(user.lastActivity || user.updatedAt).getTime() >= new Date(user.createdAt).getTime());
     });
 
     it('GET /api/admin/projects/:projectId/history should return project vote history', async () => {

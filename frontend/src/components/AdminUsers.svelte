@@ -154,7 +154,7 @@
                       <span style="color: var(--scratch-stop-text); font-weight: 700;">🤖 {u.aiVotes} AI</span> •
                       <span style="color: var(--scratch-green-text); font-weight: 700;">👤 {u.humanVotes} Human</span>
                     </td>
-                    <td style="font-size: 0.8rem; color: var(--text-muted);">{formatDate(u.updatedAt)}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted);">{formatDate(u.lastActivity || u.updatedAt)}</td>
                     <td>
                       {#if !u.isBanned}
                         <button class="btn btn-sm btn-danger admin-ban-btn" on:click={() => handleBanClick(u.userId)}>

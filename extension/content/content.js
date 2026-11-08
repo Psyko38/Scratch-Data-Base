@@ -262,6 +262,8 @@
     if (window.getComputedStyle(anchor).display === 'inline') {
       anchor.style.display = 'inline-block';
     }
+    // Keep thumbnail anchor stacking context below Scratch fixed top navbar (#navigation has z-index: 10)
+    anchor.style.zIndex = '1';
 
     if (!badge) {
       badge = document.createElement('span');

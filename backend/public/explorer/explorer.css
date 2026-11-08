@@ -953,6 +953,10 @@ tr:hover td {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--scratch-orange-dark);
+  border: 1px solid transparent;
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .external-link {
@@ -1126,9 +1130,14 @@ tr:hover td {
 
 .admin-table-scroll {
   max-height: 380px;
-  overflow-y: auto;
+  overflow: auto;
   border: 1px solid #ececec;
   border-radius: var(--radius-sm);
+}
+
+.admin-table-scroll th,
+.admin-table-scroll td {
+  white-space: nowrap;
 }
 
 .admin-table-scroll thead th {
