@@ -1,5 +1,10 @@
 // Admin Dashboard Application Logic
 (function() {
+  const BASE_PATH = typeof window.__BASE_PATH__ === 'string'
+    ? window.__BASE_PATH__
+    : window.location.pathname.replace(/\/(admin|explore)(\/.*)?$/i, '').replace(/\/+$/, '');
+  const API_BASE = (BASE_PATH ? BASE_PATH : '') + '/api';
+
   let authToken = localStorage.getItem('cao_admin_token') || '';
   let currentInspectedProjectId = null;
 
@@ -44,6 +49,9 @@
 
   // Helper for Authenticated Fetch
   async function apiFetch(url, options = {}) {
+    if (url.startsWith('/api/')) {
+      url = API_BASE + url.slice(4);
+    }
     options.headers = options.headers || {};
     options.credentials = 'include';
     if (authToken) {
@@ -151,7 +159,7 @@
     const password = passwordInput.value;
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(`${API_BASE}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -505,11 +513,11 @@
 
   // CSV Export
   exportVotesBtn.addEventListener('click', () => {
-    window.location.href = `/api/admin/export/csv?type=votes`;
+    window.location.href = `${API_BASE}/admin/export/csv?type=votes`;
   });
 
   exportProjectsBtn.addEventListener('click', () => {
-    window.location.href = `/api/admin/export/csv?type=projects`;
+    window.location.href = `${API_BASE}/admin/export/csv?type=projects`;
   });
 
   refreshStatsBtn.addEventListener('click', () => {

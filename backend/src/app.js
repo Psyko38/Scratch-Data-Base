@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const fs = require('node:fs');
 const path = require('node:path');
 const config = require('./config');
 const db = require('./db/database');
@@ -11,7 +12,7 @@ db.init();
 
 const app = express();
 
-// Trust reverse proxies if in production
+// Trust reverse proxies (Alwaysdata, Nginx, Docker, Cloudflare, etc.)
 if (config.nodeEnv === 'production') {
   app.set('trust proxy', 1);
 }
@@ -19,12 +20,10 @@ if (config.nodeEnv === 'production') {
 // CORS configuration supporting Chrome Extensions and web clients
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, extensions in some contexts)
-    // or from chrome-extension:// origins
     if (!origin || origin.startsWith('chrome-extension://') || config.corsOrigins === '*' || (Array.isArray(config.corsOrigins) && config.corsOrigins.includes(origin))) {
       callback(null, true);
     } else {
-      callback(null, true); // Permissive for API consumers
+      callback(null, true);
     }
   },
   credentials: true,
@@ -37,8 +36,42 @@ app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// Serve static community explorer assets (Unified public & admin page)
-app.use(express.static(path.resolve(__dirname, '../public/explorer')));
+// Subpath & Reverse Proxy handler (Supports subroutes like https://matteobanzet.alwaysdata.net/scratch-ai)
+const configuredBasePath = config.basePath || '';
+
+app.use((req, res, next) => {
+  const forwardedPrefix = (req.headers['x-forwarded-prefix'] || '').trim().replace(/\/+$/, '');
+  const effectiveBasePath = configuredBasePath || forwardedPrefix;
+
+  // 1. Explicit base path matching
+  if (effectiveBasePath && req.url.startsWith(effectiveBasePath)) {
+    req.basePath = effectiveBasePath;
+    const remaining = req.url.slice(effectiveBasePath.length);
+    req.url = remaining.startsWith('/') ? remaining : (remaining ? '/' + remaining : '/');
+    return next();
+  }
+
+  // 2. Direct bare access without trailing slash (e.g. GET /scratch-ai -> 301 to /scratch-ai/)
+  const bareMatch = req.url.match(/^(\/(?!api\b|admin\b|explore\b)[a-zA-Z0-9_\-]+)$/);
+  if (bareMatch) {
+    return res.redirect(301, req.url + '/');
+  }
+
+  // 3. Dynamic subpath detection for unknown prefixes:
+  // Matches e.g. /<subpath>/ OR /<subpath>/api/... OR /<subpath>/explorer.css
+  const subpathMatch = req.url.match(/^(\/(?!api\b|admin\b|explore\b)[a-zA-Z0-9_\-]+)(\/.*)$/);
+  if (subpathMatch) {
+    req.basePath = subpathMatch[1];
+    req.url = subpathMatch[2];
+    return next();
+  }
+
+  req.basePath = effectiveBasePath || '';
+  next();
+});
+
+// Serve static community explorer assets without automatically serving raw index.html (handled dynamically below)
+app.use(express.static(path.resolve(__dirname, '../public/explorer'), { index: false }));
 
 // Apply general rate limiting to API routes
 app.use('/api', apiLimiter);
@@ -51,27 +84,48 @@ app.use('/api', require('./routes/users'));
 app.use('/api', require('./routes/publicStats'));
 app.use('/api/admin', require('./routes/admin'));
 
+// Load Community Explorer HTML Template
+const indexHtmlPath = path.resolve(__dirname, '../public/explorer/index.html');
+let indexHtmlTemplate = '';
+try {
+  indexHtmlTemplate = fs.readFileSync(indexHtmlPath, 'utf8');
+} catch (e) {
+  console.error('Could not preload explorer index.html:', e);
+}
+
 // Community Explorer Page (Also serves unified Admin User Management view)
 app.get(['/', '/explore', '/explore/', '/admin', '/admin/'], (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../public/explorer/index.html'));
+  const forwardedPrefix = (req.headers['x-forwarded-prefix'] || '').trim().replace(/\/+$/, '');
+  const currentBase = (req.basePath || forwardedPrefix || configuredBasePath || '').replace(/\/+$/, '');
+  const baseHref = currentBase ? currentBase + '/' : '/';
+
+  // Inject <base href="..."> and window.__BASE_PATH__ for seamless subroute asset resolution
+  const html = indexHtmlTemplate.replace(
+    '<head>',
+    `<head>\n  <base href="${baseHref}">\n  <script>window.__BASE_PATH__ = "${currentBase}";</script>`
+  );
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
 });
 
 // JSON info route
 app.get('/api/info', (req, res) => {
+  const base = req.basePath || configuredBasePath || '';
   res.json({
     name: 'Scratch AI API',
     description: 'Centralized backend service for Scratch AI Community Extension',
     version: '1.0.0',
-    documentation: '/docs',
+    basePath: base || '/',
     endpoints: {
-      health: '/api/health',
-      communityStats: '/api/stats',
-      projectStats: '/api/projects/:projectId',
-      submitVote: 'POST /api/votes',
-      userVotes: '/api/users/:userId/votes',
-      publicCsvExport: '/api/export/csv?type=votes|projects',
-      communityExplorer: '/',
-      adminDashboard: '/admin'
+      health: base + '/api/health',
+      communityStats: base + '/api/stats',
+      projectStats: base + '/api/projects/:projectId',
+      submitVote: `POST ${base}/api/votes`,
+      userVotes: base + '/api/users/:userId/votes',
+      publicCsvExport: base + '/api/export/csv?type=votes|projects',
+      communityExplorer: base + '/',
+      adminDashboard: base + '/admin'
     }
   });
 });

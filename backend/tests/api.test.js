@@ -328,4 +328,47 @@ describe('Cao AI Detector API Integration Tests', () => {
       assert.ok(Number(firefoxRes.headers['content-length']) > 1000);
     });
   });
+
+  describe('Subroute & Subpath Support (Alwaysdata, Reverse Proxies, Subdirectories)', () => {
+    it('GET /scratch-ai/api/health should route seamlessly and return healthy status', async () => {
+      const res = await request(app).get('/scratch-ai/api/health');
+      assert.equal(res.status, 200);
+      assert.equal(res.body.status, 'healthy');
+      assert.equal(res.body.database, 'ok');
+    });
+
+    it('GET /scratch-ai should 301 redirect to /scratch-ai/ with trailing slash', async () => {
+      const res = await request(app).get('/scratch-ai');
+      assert.equal(res.status, 301);
+      assert.equal(res.headers.location, '/scratch-ai/');
+    });
+
+    it('GET /scratch-ai/ should inject <base href="/scratch-ai/"> and window.__BASE_PATH__', async () => {
+      const res = await request(app).get('/scratch-ai/');
+      assert.equal(res.status, 200);
+      assert.match(res.text, /<base href="\/scratch-ai\/">/);
+      assert.match(res.text, /window\.__BASE_PATH__ = "\/scratch-ai"/);
+    });
+
+    it('GET /scratch-ai/explorer.css should serve static css under subpath', async () => {
+      const res = await request(app).get('/scratch-ai/explorer.css');
+      assert.equal(res.status, 200);
+      assert.match(res.headers['content-type'], /text\/css/);
+    });
+
+    it('GET /scratch-ai/api/info should show endpoints prefixed with /scratch-ai', async () => {
+      const res = await request(app).get('/scratch-ai/api/info');
+      assert.equal(res.status, 200);
+      assert.equal(res.body.basePath, '/scratch-ai');
+      assert.equal(res.body.endpoints.health, '/scratch-ai/api/health');
+      assert.equal(res.body.endpoints.communityExplorer, '/scratch-ai/');
+    });
+
+    it('Reverse proxy with X-Forwarded-Prefix should inject prefix into <base href>', async () => {
+      const res = await request(app).get('/').set('X-Forwarded-Prefix', '/proxy-subpath');
+      assert.equal(res.status, 200);
+      assert.match(res.text, /<base href="\/proxy-subpath\/">/);
+      assert.match(res.text, /window\.__BASE_PATH__ = "\/proxy-subpath"/);
+    });
+  });
 });

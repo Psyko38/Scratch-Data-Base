@@ -35,6 +35,7 @@ router.post('/login', loginLimiter, (req, res) => {
     httpOnly: true,
     secure: config.nodeEnv === 'production',
     sameSite: 'lax',
+    path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 
@@ -56,7 +57,8 @@ router.post('/logout', (req, res) => {
   res.clearCookie(config.cookieName, {
     httpOnly: true,
     secure: config.nodeEnv === 'production',
-    sameSite: 'lax'
+    sameSite: 'lax',
+    path: '/'
   });
   res.json({ success: true, message: 'Logged out successfully.' });
 });

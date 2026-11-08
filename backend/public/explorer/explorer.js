@@ -1,6 +1,11 @@
 // Scratch AI – Unified Community Explorer & Admin User Management Controller
 
 (function() {
+  const BASE_PATH = typeof window.__BASE_PATH__ === 'string'
+    ? window.__BASE_PATH__
+    : window.location.pathname.replace(/\/(admin|explore)(\/.*)?$/i, '').replace(/\/+$/, '');
+  const API_BASE = (BASE_PATH ? BASE_PATH : '') + '/api';
+
   let authToken = localStorage.getItem('cao_admin_token') || '';
   let cachedAdminUsers = [];
 
@@ -206,9 +211,9 @@
   }
 
   async function checkAdminSession() {
-    const isAtAdminRoute = window.location.pathname.startsWith('/admin');
+    const isAtAdminRoute = window.location.pathname.endsWith('/admin') || window.location.pathname.endsWith('/admin/') || window.location.pathname.includes('/admin');
     try {
-      const res = await adminFetch('/api/admin/me');
+      const res = await adminFetch(`${API_BASE}/admin/me`);
       if (res.ok) {
         const data = await res.json();
         setAdminLoggedIn(data.admin.username);
@@ -261,7 +266,7 @@
     const password = adminPasswordInput.value;
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(`${API_BASE}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -294,7 +299,7 @@
 
   adminLogoutBtn.addEventListener('click', async () => {
     try {
-      await adminFetch('/api/admin/logout', { method: 'POST' });
+      await adminFetch(`${API_BASE}/admin/logout`, { method: 'POST' });
     } catch (e) {}
     setAdminLoggedOut();
     showToast('Signed out of administrator mode', 'info');
@@ -302,7 +307,7 @@
 
   async function loadAdminUsers() {
     try {
-      const res = await adminFetch('/api/admin/users');
+      const res = await adminFetch(`${API_BASE}/admin/users`);
       if (!res.ok) throw new Error('Failed to load users');
       const data = await res.json();
       cachedAdminUsers = data.users || [];
@@ -405,7 +410,7 @@
   async function banUser(userId) {
     const purge = confirm(`Ban user ${userId}?\n\nClick OK to also delete all their submitted votes, or Cancel to ban them without deleting past votes.`);
     try {
-      const res = await adminFetch(`/api/admin/users/${encodeURIComponent(userId)}/ban`, {
+      const res = await adminFetch(`${API_BASE}/admin/users/${encodeURIComponent(userId)}/ban`, {
         method: 'POST',
         body: { deleteVotes: purge }
       });
@@ -422,7 +427,7 @@
 
   async function unbanUser(userId) {
     try {
-      const res = await adminFetch(`/api/admin/users/${encodeURIComponent(userId)}/ban`, {
+      const res = await adminFetch(`${API_BASE}/admin/users/${encodeURIComponent(userId)}/ban`, {
         method: 'DELETE'
       });
       const data = await res.json();
@@ -467,7 +472,7 @@
 
   async function loadCommunityStats() {
     try {
-      const res = await fetch('/api/stats');
+      const res = await fetch(`${API_BASE}/stats`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -590,7 +595,7 @@
     projectModal.classList.remove('hidden');
 
     try {
-      const res = await fetch(`/api/projects/${projectId}/history/public`);
+      const res = await fetch(`${API_BASE}/projects/${projectId}/history/public`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       renderModalContent(data);
@@ -684,7 +689,7 @@
 
   if (heroExportBtn) {
     heroExportBtn.addEventListener('click', () => {
-      window.location.href = '/api/export/csv?type=projects';
+      window.location.href = `${API_BASE}/export/csv?type=projects`;
     });
   }
 
@@ -709,13 +714,13 @@
 
   if (exportVotesBtn) {
     exportVotesBtn.addEventListener('click', () => {
-      window.location.href = '/api/export/csv?type=votes';
+      window.location.href = `${API_BASE}/export/csv?type=votes`;
     });
   }
 
   if (exportProjectsBtn) {
     exportProjectsBtn.addEventListener('click', () => {
-      window.location.href = '/api/export/csv?type=projects';
+      window.location.href = `${API_BASE}/export/csv?type=projects`;
     });
   }
 

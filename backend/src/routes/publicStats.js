@@ -206,7 +206,8 @@ router.get('/extension/download', (req, res) => {
   try {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'http';
     const host = req.get('host');
-    const serverUrl = host ? `${protocol}://${host}` : null;
+    const basePath = (req.basePath || '').replace(/\/+$/, '');
+    const serverUrl = host ? `${protocol}://${host}${basePath}` : null;
     const zipBuffer = buildExtensionZip(browser, serverUrl);
     const filename = `scratch-ai-${browser}-extension.zip`;
     res.setHeader('Content-Type', 'application/zip');
